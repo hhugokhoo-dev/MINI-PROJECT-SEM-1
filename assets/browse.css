@@ -1,0 +1,314 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Quicksand', -apple-system, sans-serif;
+    background: #fcf4f7;
+    color: #2d2d2d;
+    line-height: 1.6;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #111111;
+    text-decoration: none;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav li {
+    margin-left: 30px;
+}
+
+nav a {
+    font-size: 20px;
+    text-decoration: none;
+    color: #444;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: blueviolet;
+}
+
+.header-bg {
+    background-image: url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200&h=400&fit=crop&crop=center');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 24px;
+    padding: 40px 30px;
+    margin-bottom: 30px;
+    position: relative;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.header-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 240, 245, 0.60);
+    border-radius: 24px;
+    z-index: 0;
+}
+
+.header-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.header-content .subtitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #5e3a4a;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.6);
+    display: inline-block;
+    padding: 4px 20px;
+    border-radius: 40px;
+    backdrop-filter: blur(4px);
+}
+
+.skin-description {
+    background: #fff8fa;
+    border-radius: 18px;
+    padding: 18px 24px;
+    margin-bottom: 28px;
+    border-left: 6px solid #c27a9b;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.skin-description .desc-text {
+    font-size: 20px;
+    font-weight: 500;
+    color: #3d2a33;
+}
+
+.skin-description .desc-text strong {
+    color: #b0607e;
+    font-weight: 600;
+}
+
+.category-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-weight: 600;
+    color: #4a1e2f;
+    margin: 30px 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e8d0da;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.category-heading span {
+    background: #f0dce4;
+    padding: 0 14px;
+    border-radius: 40px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #5e3a4a;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 6px;
+    margin-bottom: 40px;
+}
+
+.product-card {
+    background: #ffffff;
+    border-radius: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid rgba(230, 200, 210, 0.25);
+}
+
+.product-card .card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    background: #f5e8ed;
+}
+
+.product-card .card-body {
+    padding: 16px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-card .card-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 25px;
+    font-weight: 600;
+    color: #3d1f2c;
+}
+
+.product-card .card-body .desc {
+    font-size: 15px;
+    color: #5f4a55;
+    font-weight: 400;
+    flex: 1;
+}
+
+.card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.car-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    background: #f0e2e8;
+    padding: 2px 12px;
+    border-radius: 30px;
+    color: #5e3a4a;
+    border: 1px solid #e8d0da;
+}
+
+.car-tag.firstdesc {
+    font-size: 15px;
+    background: #d9e6f0;
+    border-color: #b8cddf;
+    color: #2a4a6a;
+}
+
+.car-tag.seconddesc {
+    font-size: 15px;
+    background: #f0e8d9;
+    border-color: #dfd4b8;
+    color: #5a4a2a;
+}
+
+/* Price shown above the Rent Now button */
+.card-price {
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #3d1f2c;
+}
+
+.card-price span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #8a7680;
+}
+
+/* Rent Now button — scoped to this class instead of a bare `button` selector,
+   so it won't accidentally style every button added to the page later */
+.rent-btn {
+    width: 100%;
+    margin-top: 6px;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #ffffff;
+    background-color: #f26b21;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.rent-btn:hover {
+    background-color: #d4591a;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    background: white;
+    margin-top: 40px;
+}
+
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 20px;
+    }
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    nav li {
+        margin: 8px 15px;
+    }
+    nav a {
+        font-size: 18px;
+    }
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+    .header-bg {
+        padding: 28px 16px;
+        border-radius: 18px;
+    }
+    .header-content .subtitle {
+        font-size: 0.9rem;
+        padding: 2px 14px;
+    }
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+    .product-card .card-img {
+        height: 150px;
+    }
+    .skin-description {
+        padding: 14px 16px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .skin-description .desc-text {
+        font-size: 0.92rem;
+    }
+    .category-heading {
+        font-size: 1.4rem;
+        margin-top: 20px;
+    }
+}
