@@ -1,7 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/config/db.php';
-
+require_once __DIR__ . '/../config/db.php';
 $error = '';
 $email = '';
 
@@ -55,8 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Auth pages CSS (login, register) -->
-    <link rel="stylesheet" href="assets/auth.css">
-</head>
+<link rel="stylesheet" href="/assets/auth.css">
 
 <body class="auth-body">
 
@@ -77,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="auth-panel-top">
                 <a href="index.html" class="auth-logo">DRIV<span>O</span>RA</a>
-                <a href="index.html" class="auth-back">Back to home</a>
+                <a href="/mainpage/index.php" class="auth-back">Back to home</a>
             </div>
 
             <div class="auth-panel-main">

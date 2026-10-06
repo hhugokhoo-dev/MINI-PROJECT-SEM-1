@@ -32,8 +32,7 @@
             <a href="#contact">Contact</a>
         </nav>
 
-        <a href="login.php" class="nav-btn">Book Now</a>
-
+<a href="/system/login.php" class="nav-btn">Book Now</a>
     </header>
 
 
@@ -125,7 +124,7 @@
             </div>
 
 
-            <button class="search-btn">
+            <   <button class="rent-btn" onclick="location.href='pending.php?id=1'">RENT NOW</button>="search-btn">
                 Find a Car
             </button>
 

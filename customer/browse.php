@@ -16,11 +16,11 @@
     <nav>
        <a href="/../index.php" class="logo">DRIV<span style="color:#f26b21;">O</span>RA</a>
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="product.html">Products</a></li>
-            <li><a href="skintype.html">Skin Type</a></li>
-            <li><a href="tips.html">Tips</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="/system/login.php">Login</a></li>
+            <li><a href="register.php">Register Now</a></li>
+            <li><a href="logout.php">Logout</a></li>
+            
         </ul>
     </nav>
 
@@ -59,11 +59,11 @@
                 <p class="desc">0–100 km/h : 4.4 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Naturally aspirated V8 </span>
-                    <span class="car-tag seconddesc">Grand touring elegance</span>
+                    <span class="car-tag seconddesc">“Elegance in Motion.”</span>
                 </div>
 
-                <p class="card-price">RM850<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,199 <span>/day</span></p>
+                 <button class="rent-btn" onclick="location.href='pending.php?id=1'">RENT NOW</button>
             </div>
         </article>
 
@@ -77,11 +77,11 @@
                 <p class="desc">0–100 km/h : 4.2 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Turbo inline-6 hybrid </span>
-                    <span class="car-tag seconddesc">Frameless doors</span>
+                    <span class="car-tag seconddesc">“Born to Perform. Designed to Impress.”</span>
                 </div>
 
-                <p class="card-price">RM750<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,399 <span>/day</span></p>
+                   <button class="rent-btn" onclick="location.href='pending.php?id=2'">RENT NOW</button>
             </div>
         </article>
 
@@ -95,11 +95,11 @@
                 <p class="desc">0–100 km/h : 3.5 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Rear-engine layout </span>
-                    <span class="car-tag seconddesc">Precision steeringn</span>
+                    <span class="car-tag seconddesc">“An Icon of Pure Performance.”</span>
                 </div>
 
-                <p class="card-price">RM1,200<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,599 <span>/day</span></p>
+                 <button class="rent-btn" onclick="location.href='pending.php?id=3'">RENT NOW</button>
             </div>
         </article>
 
@@ -113,12 +113,11 @@
                 <p class="desc">0–100 km/h : 3.7 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Track-focused tuning</span>
-                    <span class="car-tag seconddesc">Lightweight carbon body</span>
+                    <span class="car-tag seconddesc">“Uncompromising by Nature.”</span>
                 </div>
 
-                <p class="card-price">RM1,500<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
-            </div>
+                <p class="card-price">RM1,500 <span>/day</span></p>
+                 <button class="rent-btn" onclick="location.href='pending.php?id=4'">RENT NOW</button>
         </article>
 
         <article class="product-card">
@@ -130,12 +129,12 @@
                 <p class="desc">228hp
                 <p class="desc">0–100 km/h : 6.3 s
                 <div class="card-footer">
-                    <span class="car-tag firstdesc">Rear-wheel drive </span>
-                    <span class="car-tag seconddesc">Nimble, lightweight handling</span>
+                    <span class="car-tag firstdesc"> Nimble, lightweight handling</span>
+                    <span class="car-tag seconddesc">“Feel Every Curve.”</span>
                 </div>
 
-                <p class="card-price">RM280<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM899 <span>/day</span></p>
+                 <button class="rent-btn" onclick="location.href='pending.php?id=5'">RENT NOW</button>
             </div>
         </article>
 
@@ -149,11 +148,11 @@
                 <p class="desc">0–100 km/h : 2.9 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Twin-turbo V6</span>
-                    <span class="car-tag seconddesc">All-wheel drive launch control</span>
+                    <span class="car-tag seconddesc">“Unleash the Legend.”</span>
                 </div>
 
-                <p class="card-price">RM1,800<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM2099 <span>/day</span></p>
+                <button class="rent-btn" onclick="location.href='pending.php?id=6'">RENT NOW</button>
             </div>
         </article>
 
@@ -167,11 +166,11 @@
                 <p class="desc">0–100 km/h : 5.4 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Turbo hot hatch </span>
-                    <span class="car-tag seconddesc">Compact all-wheel drive</span>
+                    <span class="car-tag seconddesc">“Big Adventures. Racing Spirit.”</span>
                 </div>
 
-                <p class="card-price">RM380<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM888 <span>/day</span></p>
+                 <button class="rent-btn" onclick="location.href='pending.php?id=7'">RENT NOW</button>
             </div>
         </article>
 
@@ -185,11 +184,11 @@
                 <p class="desc">0–100 km/h : 5.2 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Turbo inline-6 mild hybrid </span>
-                    <span class="car-tag seconddesc">Coupe-SUV silhouette</span>
+                    <span class="car-tag seconddesc">“Power Meets Prestige.”</span>
                 </div>
 
-                <p class="card-price">RM900<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,599 <span>/day</span></p>
+                <button class="rent-btn" onclick="location.href='pending.php?id=8'">RENT NOW</button>
             </div>
         </article>
 
@@ -211,11 +210,11 @@
                 <p class="desc">0–100 km/h : 5.0 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Flagship luxury sedan </span>
-                    <span class="car-tag seconddesc">RM750k and above</span>
+                    <span class="car-tag seconddesc">"The Standard of Supreme Luxury"</span>
                 </div>
 
-                <p class="card-price">RM1,300<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,599<span>/day</span></p>
+                 <button class="rent-btn" onclick="location.href='pending.php?id=9'">RENT NOW</button>
             </div>
         </article>
 
@@ -229,11 +228,11 @@
                 <p class="desc">0–100 km/h : 5.2 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Full-size flagship sedan </span>
-                    <span class="car-tag seconddesc">RM650k and above</span>
+                    <span class="car-tag seconddesc">“The Art of Executive Excellence.”</span>
                 </div>
 
-                <p class="card-price">RM1,200<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,599<span>/day</span></p>
+                 <button class="rent-btn" onclick="location.href='pending.php?id=10'">RENT NOW</button>
             </div>
         </article>
 
@@ -247,11 +246,11 @@
                 <p class="desc">0–100 km/h : 5.7 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Long-wheelbase executive limousine </span>
-                    <span class="car-tag seconddesc">RM800k and above</span>
+                    <span class="car-tag seconddesc">“Elegance in Every Detail.”</span>
                 </div>
 
-                <p class="card-price">RM1,400<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,599<span>/day</span></p>
+             <button class="rent-btn" onclick="location.href='pending.php?id=11'">RENT NOW</button>
             </div>
         </article>
 
@@ -265,11 +264,11 @@
                 <p class="desc">0–100 km/h : 5.3 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Sports car handling in sedan form </span>
-                    <span class="car-tag seconddesc">RM900k and above</span>
+                    <span class="car-tag seconddesc">“Where Performance Meets Prestige.”</span>
                 </div>
 
-                <p class="card-price">RM1,600<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,999<span>/day</span></p>
+                <button class="rent-btn" onclick="location.href='pending.php?id=12'">RENT NOW</button>
             </div>
         </article>
 
@@ -283,11 +282,11 @@
                 <p class="desc">0–100 km/h : 5.0 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Handcrafted Takumi interior </span>
-                    <span class="car-tag seconddesc">RM700k and above</span>
+                    <span class="car-tag seconddesc">“The Serenity of True Luxury.”</span>
                 </div>
 
-                <p class="card-price">RM1,300<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,699<span>/day</span></p>
+        <button class="rent-btn" onclick="location.href='pending.php?id=13'">RENT NOW</button>
             </div>
         </article>
 
@@ -301,11 +300,11 @@
                 <p class="desc">0–100 km/h : 4.9 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Italian sports luxury heritage </span>
-                    <span class="car-tag seconddesc">RM650k and above</span>
+                    <span class="car-tag seconddesc">“Italian Passion. Unmistakable Presence.”</span>
                 </div>
 
-                <p class="card-price">RM1,100<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,500<span>/day</span></p>
+                <button class="rent-btn" onclick="location.href='pending.php?id=14'">RENT NOW</button>
             </div>
         </article>
 
@@ -319,11 +318,11 @@
                 <p class="desc">0–100 km/h : 7.1 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Scandinavian minimalist design </span>
-                    <span class="car-tag seconddesc">RM350k and above</span>
+                    <span class="car-tag seconddesc">“Scandinavian Elegance, Redefined.”</span>
                 </div>
 
-                <p class="card-price">RM550<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,200<span>/day</span></p>
+                <button class="rent-btn" onclick="location.href='pending.php?id=15'">RENT NOW</button>
             </div>
         </article>
 
@@ -337,11 +336,11 @@
                 <p class="desc">0–100 km/h : 4.6 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Performance executive sedan </span>
-                    <span class="car-tag seconddesc">RM550k and above</span>
+                    <span class="car-tag seconddesc">“The Thrill of Refined Power.”</span>
                 </div>
 
                 <p class="card-price">RM950<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+            <button class="rent-btn" onclick="location.href='pending.php?id=16'">RENT NOW</button>
             </div>
         </article>
 
@@ -363,11 +362,11 @@
                 <p class="desc">0–100 km/h : 9.8 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Chauffeur-driven luxury MPV </span>
-                    <span class="car-tag seconddesc">RM400k and above</span>
+                    <span class="car-tag seconddesc">“Arrive in Absolute Comfort.”</span>
                 </div>
 
-                <p class="card-price">RM700<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM999<span>/day</span></p>
+             <button class="rent-btn" onclick="location.href='pending.php?id=17'">RENT NOW</button>
             </div>
         </article>
 
@@ -381,11 +380,11 @@
                 <p class="desc">0–100 km/h : 9.8 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Premium executive lounge seating </span>
-                    <span class="car-tag seconddesc">RM350k and above</span>
+                    <span class="car-tag seconddesc">“Bold Design. First-Class Comfort.”</span>
                 </div>
 
-                <p class="card-price">RM650<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM999<span>/day</span></p>
+                 <button class="rent-btn" onclick="location.href='pending.php?id=18'">RENT NOW</button>
             </div>
         </article>
 
@@ -399,11 +398,11 @@
                 <p class="desc">0–100 km/h : 9.6 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">First-class private suite seating </span>
-                    <span class="car-tag seconddesc">RM800k and above</span>
+                    <span class="car-tag seconddesc">“Your Private World of Luxury.”</span>
                 </div>
 
-                <p class="card-price">RM1,500<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <p class="card-price">RM1,799<span>/day</span></p>
+                <button class="rent-btn" onclick="location.href='pending.php?id=19'">RENT NOW</button>
             </div>
         </article>
 
@@ -417,11 +416,11 @@
                 <p class="desc">0–100 km/h : 3.9 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Rear-wheel steering </span>
-                    <span class="car-tag seconddesc">Smart cockpit technology</span>
+                    <span class="car-tag seconddesc">“The Future of First-Class Travel.”</span>
                 </div>
 
                 <p class="card-price">RM900<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <button class="rent-btn" onclick="location.href='pending.php?id=20'">RENT NOW</button>
             </div>
         </article>
 
@@ -435,11 +434,11 @@
                 <p class="desc">0–100 km/h : 4.5 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Flagship business MPV </span>
-                    <span class="car-tag seconddesc">Dual-motor AWD performance</span>
+                    <span class="car-tag seconddesc">“Electrifying Luxury. Limitless Comfort.”</span>
                 </div>
 
                 <p class="card-price">RM950<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <button class="rent-btn" onclick="location.href='pending.php?id=21'">RENT NOW</button>
             </div>
         </article>
 
@@ -453,11 +452,11 @@
                 <p class="desc">0–100 km/h : 8.2 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Captain's chairs with premium trim </span>
-                    <span class="car-tag seconddesc">Top-spec 8-seater</span>
+                    <span class="car-tag seconddesc">“More Space. More Moments.”r</span>
                 </div>
 
                 <p class="card-price">RM500<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <button class="rent-btn" onclick="location.href='pending.php?id=22'">RENT NOW</button>
             </div>
         </article>
 
@@ -471,11 +470,11 @@
                 <p class="desc">0–100 km/h : 9.5 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">Futuristic spaceship-inspired design </span>
-                    <span class="car-tag seconddesc">Premium 9-seater</span>
+                    <span class="car-tag seconddesc">“A New Dimension of Travel.”</span>
                 </div>
 
                 <p class="card-price">RM450<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+                <button class="rent-btn" onclick="location.href='pending.php?id=23'">RENT NOW</button>
             </div>
         </article>
 
@@ -489,11 +488,11 @@
                 <p class="desc">0–100 km/h : 5.9 s
                 <div class="card-footer">
                     <span class="car-tag firstdesc">BYD e-platform architecture </span>
-                    <span class="car-tag seconddesc">Luxury family MPV</span>
+                    <span class="car-tag seconddesc">“Where Innovation Embraces Luxury.”</span>
                 </div>
 
                 <p class="card-price">RM850<span>/day</span></p>
-                <button class="rent-btn">RENT NOW</button>
+             <button class="rent-btn" onclick="location.href='pending.php?id=24'">RENT NOW</button>
             </div>
         </article>
 
@@ -505,3 +504,7 @@
 
 </body>
 </html>
+
+
+
+

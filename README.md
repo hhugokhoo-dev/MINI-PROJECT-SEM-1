@@ -77,7 +77,7 @@ Using css to style the product card.
 The UI design of after clicking the rent now button and adding the dashboard.
 
 ### What I actually did
-
+Done for a basic structure of the page
 
 ### Blockers / Challenges
 
@@ -87,29 +87,29 @@ The UI design of after clicking the rent now button and adding the dashboard.
 
 ---
 
-## Day 4 — Date: ____
+## Day 4 — Date: 2/10/2026
 
 ### What I planned to do today
-
+Adjust the cliking page 
 
 ### What I actually did
 
 
 ### Blockers / Challenges
-
+mysql occur problem 
 
 ### What I learned
 
 
 ---
 
-## Day 5 — Date: ____
+## Day 5 — Date:5/10/2026
 
 ### What I planned to do today
-
+Try to solving theb problem of  mysql databse
 
 ### What I actually did
-
+Solve the problem 
 
 ### Blockers / Challenges
 
@@ -119,10 +119,10 @@ The UI design of after clicking the rent now button and adding the dashboard.
 
 ---
 
-## Day 6 — Date: ____
+## Day 6 — Date: 6/10/2026
 
 ### What I planned to do today
-
+The pending page and the staff access
 
 ### What I actually did
 

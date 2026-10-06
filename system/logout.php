@@ -1,22 +1,12 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true){
-    header('Location: index.html');
-    exit;
+$_SESSION = [];
+if (ini_get('session.use_cookies')) {
+    $p = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
 }
-?>
+session_destroy();
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charqset="UTF-8">
-    <title>Home</title>
-</head>
-<body>
-
-    <h2>Welcome, <?php echo htmlspecialchars($_SESSION['email']); ?></h2>
-    <a href="05_logout_exercise.php">Logout</a>
-
-</body>
-</html>
+header('Location: /mainpage/index.php');
+exit;
