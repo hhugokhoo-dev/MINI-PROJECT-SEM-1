@@ -59,7 +59,6 @@ This system solves that problem by providing an online platform where customers 
 |---|:---:|:---:|:---:|
 | Register / Login | ✅ | ✅ | ✅ |
 | Browse / view vehicles | ✅ | ✅ | ✅ |
-| Update profile | ✅ | ✅ | ✅ |
 | Submit rental application | ✅ | ❌ | ❌ |
 | Cancel rental application | ✅ | ❌ | ❌ |
 | Add / edit / delete vehicles | ❌ | ✅ | ❌ |
