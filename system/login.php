@@ -25,14 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         // STEP 4: Redirect based on role
-        if ($user['role'] === 'customer') {
-            header('Location: /customer/browse.php');
-        } elseif ($user['role'] === 'staff') {
-            header('Location: /staff/manage_vehicles.php');
-        } elseif ($user['role'] === 'admin') {
-            header('Location: /admin/users.php');
-        }
-        exit;
+           if ($user['role'] === 'staff') {
+       header('Location: /staff/rentals.php');
+   } elseif ($user['role'] === 'admin') {
+       header('Location: /admin/categories.php');
+   } else {
+       header('Location: /customer/browse.php');
+   }
+   exit;
 
     } else {
         // STEP 5: If login failed, set an error message

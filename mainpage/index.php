@@ -239,7 +239,7 @@
 
         </div>
 
-        <a href="#cars">
+        <a href="/system/login.php">
             Book Your Car →
         </a>
 

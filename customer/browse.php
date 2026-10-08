@@ -1,5 +1,17 @@
 <?php
+session_start();
+require_once __DIR__ . '/../config/db.php';
 
+function e($text) {
+    return htmlspecialchars((string)$text);
+}
+
+// is someone logged in? only customers (or visitors) see the RENT NOW button
+$logged_in = isset($_SESSION['user']);
+$can_rent  = !$logged_in || $_SESSION['user']['role'] === 'customer';
+
+// all categories (Coupe, Sedan, MPV ...)
+$categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,489 +26,89 @@
 <body>
 
     <nav>
-       <a href="/../index.php" class="logo">DRIV<span style="color:#f26b21;">O</span>RA</a>
+        <a href="/mainpage/index.php" class="logo">DRIV<span style="color:#f26b21;">O</span>RA</a>
         <ul>
-            <li><a href="index.php">Home</a></li>
-            <li><a href="/system/login.php">Login</a></li>
-            <li><a href="register.php">Register Now</a></li>
-            <li><a href="logout.php">Logout</a></li>
-            
+            <li><a href="/mainpage/index.php">Home</a></li>
+            <?php if ($logged_in): ?>
+                <?php if ($_SESSION['user']['role'] === 'customer'): ?>
+                    <li><a href="my-rentals.php">My Rentals</a></li>
+                <?php endif; ?>
+                <li><a href="/system/logout.php">Logout</a></li>
+            <?php else: ?>
+                <li><a href="/system/login.php">Login</a></li>
+                <li><a href="/system/register.php">Register Now</a></li>
+            <?php endif; ?>
         </ul>
     </nav>
 
     <header class="header-bg">
         <div class="header-content">
-            <p class="subtitle">COUPE · SEDAN · MPV · </p>
+            <p class="subtitle"><?php echo e(strtoupper(implode(' · ', array_column($categories, 'categories_name')))); ?></p>
         </div>
     </header>
 
     <section class="skin-description">
-        <p class="desc-text">
-            <strong>Rental Requirements</strong>
-
-    <ul>
-        <li>Minimum age: 21 years old</li>
-        <li>Valid driving license (held for at least 2 years)</li>
-        <li>Valid IC / Passport required at pick-up</li>
-        <li>Refundable security deposit applies</li>
-        <li>Late return and damage charges apply as per rental agreement</li>
-    </ul>
-        </p>
+        <p class="desc-text"><strong>Rental Requirements</strong></p>
+        <ul>
+            <li>Minimum age: 21 years old</li>
+            <li>Valid driving license (held for at least 2 years)</li>
+            <li>Valid IC / Passport required at pick-up</li>
+            <li>Refundable security deposit applies</li>
+            <li>Late return and damage charges apply as per rental agreement</li>
+        </ul>
     </section>
 
-    <h2 class="category-heading">
-        Coupe <span>2-4 seats</span>
-    </h2>
-    <div class="product-grid">
+    <?php foreach ($categories as $c): ?>
 
-        <article class="product-card">
-            <img class="card-img" src="https://hips.hearstapps.com/hmg-prod/images/2024-lexus-lc-500-convertible-117-655d765c34a2d.jpg?crop=0.764xw:0.647xh;0.115xw,0.262xh&resize=2048:*" alt="" >
-            <div class="card-body">
-                <h3>Lexus LC500</h3>
-                <p class="desc">3.0L twin-turbo inline-6 </p>
-                <p class="desc">8-speed automatic
-                <p class="desc">471hp
-                <p class="desc">0–100 km/h : 4.4 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Naturally aspirated V8 </span>
-                    <span class="car-tag seconddesc">“Elegance in Motion.”</span>
+        <?php
+        // the cars in this category
+        $stmt = $pdo->prepare("SELECT * FROM vehicles WHERE categories_id = ? ORDER BY vehicle_id");
+        $stmt->execute([$c['categories_id']]);
+        $cars = $stmt->fetchAll();
+
+        // skip categories that have no cars
+        if (count($cars) === 0) {
+            continue;
+        }
+        ?>
+
+        <h2 class="category-heading">
+            <?php echo e($c['categories_name']); ?> <span><?php echo e($c['seats_label']); ?></span>
+        </h2>
+
+        <div class="product-grid">
+
+            <?php foreach ($cars as $v): ?>
+            <article class="product-card">
+                <img class="card-img" src="<?php echo e($v['image']); ?>" alt="">
+                <div class="card-body">
+                    <h3><?php echo e($v['brand'] . ' ' . $v['model']); ?></h3>
+                    <p class="desc"><?php echo e($v['engine']); ?></p>
+                    <p class="desc"><?php echo e($v['transmission_drive']); ?></p>
+                    <p class="desc"><?php echo e($v['horsepower']); ?>hp</p>
+                    <p class="desc">0–100 km/h : <?php echo e($v['acceleration_0_100']); ?> s</p>
+
+                    <div class="card-footer">
+                        <span class="car-tag firstdesc"><?php echo e($v['feature_tag']); ?></span>
+                        <span class="car-tag seconddesc">“<?php echo e($v['slogan']); ?>”</span>
+                    </div>
+
+                    <p class="card-price">RM<?php echo number_format($v['price_per_day']); ?> <span>/day</span></p>
+
+                    <?php if ($can_rent): ?>
+                        <?php if ($v['status'] === 'available'): ?>
+                            <button class="rent-btn" onclick="location.href='pending.php?id=<?php echo $v['vehicle_id']; ?>'">RENT NOW</button>
+                        <?php else: ?>
+                            <button class="rent-btn" disabled>NOT AVAILABLE</button>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
+            </article>
+            <?php endforeach; ?>
 
-                <p class="card-price">RM1,199 <span>/day</span></p>
-                 <button class="rent-btn" onclick="location.href='pending.php?id=1'">RENT NOW</button>
-            </div>
-        </article>
+        </div>
 
-        <article class="product-card">
-            <img class="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMohyqrPGthS0Ib0j3jGv4lMdZbWy9AOoZKw0OupzRTQ&s=10" alt="" >
-            <div class="card-body">
-                <h3>Mercedes-AMG CLE 53 Coupe</h3>
-                <p class="desc">3.0L inline-6 with 48V mild hybrid </p>
-                <p class="desc">4MATIC+ all-wheel drive
-                <p class="desc">443hp
-                <p class="desc">0–100 km/h : 4.2 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Turbo inline-6 hybrid </span>
-                    <span class="car-tag seconddesc">“Born to Perform. Designed to Impress.”</span>
-                </div>
-
-                <p class="card-price">RM1,399 <span>/day</span></p>
-                   <button class="rent-btn" onclick="location.href='pending.php?id=2'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoFrTiMlaRhvPo7Ow8iPiQ-irmamvNddk9vWmfcPCPbr1Kp_hzOWFQqok&s=10" alt="" >
-            <div class="card-body">
-                <h3>Porsche 911 Carrera S</h3>
-                <p class="desc">3.0L twin-turbo flat-6 </p>
-                <p class="desc">Rear-engine rear-wheel drive
-                <p class="desc">443hp
-                <p class="desc">0–100 km/h : 3.5 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Rear-engine layout </span>
-                    <span class="car-tag seconddesc">“An Icon of Pure Performance.”</span>
-                </div>
-
-                <p class="card-price">RM1,599 <span>/day</span></p>
-                 <button class="rent-btn" onclick="location.href='pending.php?id=3'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://paultan.org/image/2022/05/G82-BMW-M4-CSL-debut-1-630x330.jpg" alt="" >
-            <div class="card-body">
-                <h3>BMW M4 CSL</h3>
-                <p class="desc">2.0L turbo inline-4 </p>
-                <p class="desc">8-speed automatic
-                <p class="desc">543hp
-                <p class="desc">0–100 km/h : 3.7 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Track-focused tuning</span>
-                    <span class="car-tag seconddesc">“Uncompromising by Nature.”</span>
-                </div>
-
-                <p class="card-price">RM1,500 <span>/day</span></p>
-                 <button class="rent-btn" onclick="location.href='pending.php?id=4'">RENT NOW</button>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://hips.hearstapps.com/hmg-prod/images/2026-toyota-gr86-yuzu-special-edition-pr-102-67ed5cc10d1ce.jpg?crop=1.00xw:0.847xh;0,0.0695xh&resize=2048:*" alt="" >
-            <div class="card-body">
-                <h3>Toyota GT86</h3>
-                <p class="desc">2.0L flat-4 </p>
-                <p class="desc"> Rear-wheel drive
-                <p class="desc">228hp
-                <p class="desc">0–100 km/h : 6.3 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc"> Nimble, lightweight handling</span>
-                    <span class="car-tag seconddesc">“Feel Every Curve.”</span>
-                </div>
-
-                <p class="card-price">RM899 <span>/day</span></p>
-                 <button class="rent-btn" onclick="location.href='pending.php?id=5'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://paultan.org/image/2024/03/2025-Nissan-GT-R-Japan-launch-1-850x445.jpg" alt="" >
-            <div class="card-body">
-                <h3>NIssan GT-R</h3>
-                <p class="desc">3.8-liter twin-turbocharged V6 </p>
-                <p class="desc">Dual-clutch transmission
-                <p class="desc">565hp
-                <p class="desc">0–100 km/h : 2.9 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Twin-turbo V6</span>
-                    <span class="car-tag seconddesc">“Unleash the Legend.”</span>
-                </div>
-
-                <p class="card-price">RM2099 <span>/day</span></p>
-                <button class="rent-btn" onclick="location.href='pending.php?id=6'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://assets.autobuzz.my/wp-content/uploads/2023/11/09124322/MINI-John-Cooper-Works-Countryman-all-new-debut.jpg" alt="" >
-            <div class="card-body">
-                <h3>Mini Cooper John Cooper Works (JCW) Countryman</h3>
-                <p class="desc">2.0-liter TwinPower Turbocharged 4-cylinder petrol </p>
-                <p class="desc">Compact all-wheel drive
-                <p class="desc">301hp
-                <p class="desc">0–100 km/h : 5.4 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Turbo hot hatch </span>
-                    <span class="car-tag seconddesc">“Big Adventures. Racing Spirit.”</span>
-                </div>
-
-                <p class="card-price">RM888 <span>/day</span></p>
-                 <button class="rent-btn" onclick="location.href='pending.php?id=7'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://paultan.org/image/2023/11/Mercedes-Benz-GLE53-4Matic-Coupe-Malaysia-1-1200x639.jpg" alt="" >
-            <div class="card-body">
-                <h3>Mercedes benz GLE53 Coupe</h3>
-                <p class="desc">3.0L inline-6 with 48V mild hybrid </p>
-                <p class="desc">4MATIC+ all-wheel drive
-                <p class="desc">429hp</p>
-                <p class="desc">0–100 km/h : 5.2 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Turbo inline-6 mild hybrid </span>
-                    <span class="car-tag seconddesc">“Power Meets Prestige.”</span>
-                </div>
-
-                <p class="card-price">RM1,599 <span>/day</span></p>
-                <button class="rent-btn" onclick="location.href='pending.php?id=8'">RENT NOW</button>
-            </div>
-        </article>
-
-    </div>
-
-    <h2 class="category-heading">
-        Sedan <span>4-5 seaters</span>
-    </h2>
-
-    <div class="product-grid">
-
-        <article class="product-card">
-            <img class="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY_y4KfEhVkKJqJRoW8AwVjFPq2bHuZU-3aqvGEuyAJw&s=10" alt="">
-            <div class="card-body">
-                <h3>Mercedes-Benz S450</h3>
-                <p class="desc">3.0-liter turbocharged inline-6 petrol </p>
-                <p class="desc">Rear-wheel drive
-                <p class="desc">380hp
-                <p class="desc">0–100 km/h : 5.0 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Flagship luxury sedan </span>
-                    <span class="car-tag seconddesc">"The Standard of Supreme Luxury"</span>
-                </div>
-
-                <p class="card-price">RM1,599<span>/day</span></p>
-                 <button class="rent-btn" onclick="location.href='pending.php?id=9'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAFkk0fK4ILDzBxTYLKy0t4AJqL4Qo_vNWbZNxVVJCAw&s=10" alt="">
-            <div class="card-body">
-                <h3>BMW 740i xDrive</h3>
-                <p class="desc">3.0-liter turbocharged inline-6 petrol </p>
-                <p class="desc">xDrive all-wheel drive
-                <p class="desc">381hp
-                <p class="desc">0–100 km/h : 5.2 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Full-size flagship sedan </span>
-                    <span class="car-tag seconddesc">“The Art of Executive Excellence.”</span>
-                </div>
-
-                <p class="card-price">RM1,599<span>/day</span></p>
-                 <button class="rent-btn" onclick="location.href='pending.php?id=10'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://vtpimages.audi.com/carimg2/3728/4581563728.jpg?im=Resize,width=640,height=480" alt="">
-            <div class="card-body">
-                <h3>Audi A8L 55 TFSI</h3>
-                <p class="desc">3.0-liter turbocharged V6 petrol </p>
-                <p class="desc">Quattro all-wheel drive
-                <p class="desc">340hp
-                <p class="desc">0–100 km/h : 5.7 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Long-wheelbase executive limousine </span>
-                    <span class="car-tag seconddesc">“Elegance in Every Detail.”</span>
-                </div>
-
-                <p class="card-price">RM1,599<span>/day</span></p>
-             <button class="rent-btn" onclick="location.href='pending.php?id=11'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROU_4gWJfcoprbdvVJEZ5NVosE5Fn3_nvAFsjQcBcd5w&s=10" alt="">
-            <div class="card-body">
-                <h3>Porsche Panamera</h3>
-                <p class="desc">2.9-liter twin-turbo V6 petrol </p>
-                <p class="desc">Rear-wheel drive
-                <p class="desc">353hp
-                <p class="desc">0–100 km/h : 5.3 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Sports car handling in sedan form </span>
-                    <span class="car-tag seconddesc">“Where Performance Meets Prestige.”</span>
-                </div>
-
-                <p class="card-price">RM1,999<span>/day</span></p>
-                <button class="rent-btn" onclick="location.href='pending.php?id=12'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3BBFpcYkoyrcTTEIs8B5D0lsfcKWHoNxe6UYbTEvBbg&s=10" alt="">
-            <div class="card-body">
-                <h3>Lexus LS500</h3>
-                <p class="desc">3.4-liter twin-turbo V6 petrol </p>
-                <p class="desc">Rear-wheel drive
-                <p class="desc">415hp
-                <p class="desc">0–100 km/h : 5.0 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Handcrafted Takumi interior </span>
-                    <span class="car-tag seconddesc">“The Serenity of True Luxury.”</span>
-                </div>
-
-                <p class="card-price">RM1,699<span>/day</span></p>
-        <button class="rent-btn" onclick="location.href='pending.php?id=13'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9uK1h0CfaIcnt_l2cXszXmouNTOTu_t3qU4NMuGdPaAFQJh3GAgBvhog&s=10" alt="">
-            <div class="card-body">
-                <h3>Maserati Ghibli Modena Ultima Q4</h3>
-                <p class="desc">3.0-liter twin-turbo V6 petrol </p>
-                <p class="desc">All-wheel drive
-                <p class="desc">424hp
-                <p class="desc">0–100 km/h : 4.9 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Italian sports luxury heritage </span>
-                    <span class="car-tag seconddesc">“Italian Passion. Unmistakable Presence.”</span>
-                </div>
-
-                <p class="card-price">RM1,500<span>/day</span></p>
-                <button class="rent-btn" onclick="location.href='pending.php?id=14'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://www.ccarprice.com/products/Volvo_S90_2026_3.jpg" alt="">
-            <div class="card-body">
-                <h3>Volvo S90 B5 Ultimate</h3>
-                <p class="desc">2.0-liter turbocharged mild-hybrid petrol </p>
-                <p class="desc">Front-wheel drive
-                <p class="desc">250hp
-                <p class="desc">0–100 km/h : 7.1 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Scandinavian minimalist design </span>
-                    <span class="car-tag seconddesc">“Scandinavian Elegance, Redefined.”</span>
-                </div>
-
-                <p class="card-price">RM1,200<span>/day</span></p>
-                <button class="rent-btn" onclick="location.href='pending.php?id=15'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://bmw.scene7.com/is/image/BMW/g60-ice-stage-ext-dsk-sl?qlt=80&wid=1024&fmt=webp" alt="">
-            <div class="card-body">
-                <h3>BMW 540i xDrive M Sport</h3>
-                <p class="desc">3.0-liter turbocharged inline-6 petrol </p>
-                <p class="desc">xDrive all-wheel drive
-                <p class="desc">381hp
-                <p class="desc">0–100 km/h : 4.6 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Performance executive sedan </span>
-                    <span class="car-tag seconddesc">“The Thrill of Refined Power.”</span>
-                </div>
-
-                <p class="card-price">RM950<span>/day</span></p>
-            <button class="rent-btn" onclick="location.href='pending.php?id=16'">RENT NOW</button>
-            </div>
-        </article>
-
-    </div>
-
-    <h2 class="category-heading">
-        MPV <span>4，7 & 8 seats</span>
-    </h2>
-
-    <div class="product-grid">
-
-        <article class="product-card">
-            <img class="card-img" src="https://www.automachi.com/wp-content/uploads/2024/01/Alphard-Recon-1.jpg" alt="">
-            <div class="card-body">
-                <h3>Toyota Alphard</h3>
-                <p class="desc">2.5-liter Dynamic Force 4-cylinder petrol </p>
-                <p class="desc">Front-wheel drive
-                <p class="desc">184hp
-                <p class="desc">0–100 km/h : 9.8 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Chauffeur-driven luxury MPV </span>
-                    <span class="car-tag seconddesc">“Arrive in Absolute Comfort.”</span>
-                </div>
-
-                <p class="card-price">RM999<span>/day</span></p>
-             <button class="rent-btn" onclick="location.href='pending.php?id=17'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5n3q_dntsLVe9u0Ul9BSUippeCEChBaDiAhEu7GJq9g&s=10" alt="">
-            <div class="card-body">
-                <h3>Toyota Vellfire</h3>
-                <p class="desc">2.5-liter Dynamic Force 4-cylinder petrol </p>
-                <p class="desc">Front-wheel drive
-                <p class="desc">184hp
-                <p class="desc">0–100 km/h : 9.8 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Premium executive lounge seating </span>
-                    <span class="car-tag seconddesc">“Bold Design. First-Class Comfort.”</span>
-                </div>
-
-                <p class="card-price">RM999<span>/day</span></p>
-                 <button class="rent-btn" onclick="location.href='pending.php?id=18'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://www.lexus.com.my/content/dam/lexus-v3-blueprint/models/mpv/lm/mlp/my24/teaser/gallery/my24-lm-gallery-ext-02-d.jpg" alt="">
-            <div class="card-body">
-                <h3>Lexus LM 350h</h3>
-                <p class="desc">2.5-liter petrol-hybrid 4-cylinder </p>
-                <p class="desc">All-wheel drive
-                <p class="desc">250hp
-                <p class="desc">0–100 km/h : 9.6 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">First-class private suite seating </span>
-                    <span class="car-tag seconddesc">“Your Private World of Luxury.”</span>
-                </div>
-
-                <p class="card-price">RM1,799<span>/day</span></p>
-                <button class="rent-btn" onclick="location.href='pending.php?id=19'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9LHpgB7mSIUede_SP0tMITHGQMzSu0zuunnd-T0dJ5USoCN4nowYQr5U&s=10" alt="">
-            <div class="card-body">
-                <h3>Xpeng X9 Ultra</h3>
-                <p class="desc">Dual-motor all-electric powertrain </p>
-                <p class="desc">All-wheel drive
-                <p class="desc">469hp
-                <p class="desc">0–100 km/h : 3.9 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Rear-wheel steering </span>
-                    <span class="car-tag seconddesc">“The Future of First-Class Travel.”</span>
-                </div>
-
-                <p class="card-price">RM900<span>/day</span></p>
-                <button class="rent-btn" onclick="location.href='pending.php?id=20'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://assets.autobuzz.my/wp-content/uploads/sites/2/2024/07/23194225/zeekr-009-2-696x392-1.jpg" alt="">
-            <div class="card-body">
-                <h3>Zeekr 009</h3>
-                <p class="desc">Dual-motor all-electric powertrain </p>
-                <p class="desc">All-wheel drive
-                <p class="desc">536hp
-                <p class="desc">0–100 km/h : 4.5 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Flagship business MPV </span>
-                    <span class="car-tag seconddesc">“Electrifying Luxury. Limitless Comfort.”</span>
-                </div>
-
-                <p class="card-price">RM950<span>/day</span></p>
-                <button class="rent-btn" onclick="location.href='pending.php?id=21'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://paultan.org/image/2020/08/2020-Kia-Grand-Carnival-1-e1597750446802-1200x676.jpg" alt="">
-            <div class="card-body">
-                <h3>Kia Carnival Signature</h3>
-                <p class="desc">3.5-liter V6 petrol </p>
-                <p class="desc">Front-wheel drive
-                <p class="desc">277hp
-                <p class="desc">0–100 km/h : 8.2 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Captain's chairs with premium trim </span>
-                    <span class="car-tag seconddesc">“More Space. More Moments.”r</span>
-                </div>
-
-                <p class="card-price">RM500<span>/day</span></p>
-                <button class="rent-btn" onclick="location.href='pending.php?id=22'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://paultan.org/image/2021/03/Hyundai-Staria-1-e1616032407850.jpg" alt="">
-            <div class="card-body">
-                <h3>Hyundai Staria Premium</h3>
-                <p class="desc">2.5-liter turbocharged GDi 4-cylinder petrol </p>
-                <p class="desc">Front-wheel drive
-                <p class="desc">213hp
-                <p class="desc">0–100 km/h : 9.5 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">Futuristic spaceship-inspired design </span>
-                    <span class="car-tag seconddesc">“A New Dimension of Travel.”</span>
-                </div>
-
-                <p class="card-price">RM450<span>/day</span></p>
-                <button class="rent-btn" onclick="location.href='pending.php?id=23'">RENT NOW</button>
-            </div>
-        </article>
-
-        <article class="product-card">
-            <img class="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpJox-CIzTMnycUxyUUkiHuAhDIDnoUoFtlBHoUMNH9g&s=10" alt="">
-            <div class="card-body">
-                <h3>Denza D9 EV</h3>
-                <p class="desc">Dual-motor all-electric powertrain </p>
-                <p class="desc">All-wheel drive
-                <p class="desc">435hp
-                <p class="desc">0–100 km/h : 5.9 s
-                <div class="card-footer">
-                    <span class="car-tag firstdesc">BYD e-platform architecture </span>
-                    <span class="car-tag seconddesc">“Where Innovation Embraces Luxury.”</span>
-                </div>
-
-                <p class="card-price">RM850<span>/day</span></p>
-             <button class="rent-btn" onclick="location.href='pending.php?id=24'">RENT NOW</button>
-            </div>
-        </article>
-
-    </div>
+    <?php endforeach; ?>
 
     <footer>
         <p>©️ 2026 DRIVORA | Drive further. Rent smarter.</p>
@@ -504,7 +116,3 @@
 
 </body>
 </html>
-
-
-
-

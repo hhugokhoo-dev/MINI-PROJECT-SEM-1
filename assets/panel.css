@@ -1,0 +1,111 @@
+/* panel.css - shared by staff, admin and my-rentals pages */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background: #f6f3ee;
+    color: #222;
+}
+
+/* ---------- navbar ---------- */
+nav {
+    background: #111;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+nav .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+nav .logo span { color: #f26b21; }
+nav .logo small { font-family: 'Quicksand', sans-serif; font-size: 11px; color: #f26b21; letter-spacing: 1px; margin-left: 6px; }
+nav ul { list-style: none; display: flex; gap: 24px; }
+nav a { color: #ddd; text-decoration: none; font-weight: 500; }
+
+/* ---------- layout ---------- */
+.wrap { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+h1 { font-family: 'Playfair Display', serif; margin-bottom: 20px; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.top-bar h1 { margin-bottom: 0; }
+.empty { text-align: center; color: #888; margin-top: 30px; }
+.message { background: #fde8e8; color: #b42318; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; }
+small { color: #888; }
+
+/* ---------- table ---------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .08);
+}
+th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #eee; vertical-align: middle; }
+th { background: #111; color: #fff; font-weight: 600; font-size: 14px; }
+td form { display: flex; gap: 6px; align-items: center; }
+
+/* ---------- status labels ---------- */
+.status { padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; text-transform: capitalize; }
+.status.pending, .status.rented       { background: #fff3cd; color: #8a6100; }
+.status.confirmed, .status.available  { background: #d8f3dc; color: #1b6b32; }
+.status.cancelled, .status.maintenance { background: #fde8e8; color: #b42318; }
+.status.completed { background: #e0e7ff; color: #3730a3; }
+
+/* ---------- buttons ---------- */
+button, .btn {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 6px;
+    background: #f26b21;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+button.ok { background: #2e9e4f; }
+button.no { background: #d64545; }
+.btn.grey { background: #444; }
+
+/* ---------- inputs ---------- */
+input, select {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+/* ---------- form card (add / edit car) ---------- */
+.form-card {
+    max-width: 760px;
+    background: #fff;
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .08);
+}
+.form-card label { display: block; font-weight: 600; margin: 14px 0 6px; }
+.form-card input, .form-card select { width: 100%; padding: 10px; font-size: 15px; }
+.form-card .buttons { margin-top: 24px; display: flex; gap: 10px; }
+
+/* ---------- category rows ---------- */
+.row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: #fff;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+}
+.row input { flex: 1; min-width: 0; }
+.row .id { width: 40px; color: #888; font-weight: 600; }
