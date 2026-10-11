@@ -125,7 +125,7 @@ Solve the problem
 The pending page and the staff access
 
 ### What I actually did
-
+The customer rental request pending page completely done but still need some minor adjust
 
 ### Blockers / Challenges
 
@@ -135,13 +135,13 @@ The pending page and the staff access
 
 ---
 
-## Day 7 — Date: ____
+## Day 7 — Date: 7/10/2026
 
 ### What I planned to do today
-
+Done the staff system 
 
 ### What I actually did
-
+Doing half way of the staff system 
 
 ### Blockers / Challenges
 
@@ -151,45 +151,45 @@ The pending page and the staff access
 
 ---
 
-## Day 8 — Date: ____
+## Day 8 — Date: 8/10/2026
 
 ### What I planned to do today
-
+Done the staff system and also the admin system
 
 ### What I actually did
-
+Staff system done but the admin system still on going
 
 ### Blockers / Challenges
-
+The difficulties of php
 
 ### What I learned
 
 
 ---
 
-## Day 9 — Date: ____
+## Day 9 — Date: 9/10/2026
 
 ### What I planned to do today
-
+Done the admin system
 
 ### What I actually did
-
+Half way done of admin system
 
 ### Blockers / Challenges
-
+The sql data and the admin systme didnt update simultaneously
 
 ### What I learned
 
 
 ---
 
-## Day 10 — Date: ____
+## Day 10 — Date: 10/10/2026
 
 ### What I planned to do today
-
+Finish the admin system by adding the users php and categories php
 
 ### What I actually did
-
+Done the users php
 
 ### Blockers / Challenges
 
@@ -199,10 +199,10 @@ The pending page and the staff access
 
 ---
 
-## Day 11 — Date: ____
+## Day 11 — Date: 11/10/2026
 
 ### What I planned to do today
-
+Finish the admin categories php and also overall all the role php file
 
 ### What I actually did
 

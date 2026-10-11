@@ -92,7 +92,7 @@ nav a:hover {
     backdrop-filter: blur(4px);
 }
 
-.skin-description {
+.rental-terms {
     background: #fff8fa;
     border-radius: 18px;
     padding: 18px 24px;
@@ -105,19 +105,19 @@ nav a:hover {
     flex-wrap: wrap;
 }
 
-.skin-description .desc-text {
+.rental-terms .desc-text {
     font-size: 20px;
     font-weight: 500;
     color: #3d2a33;
 }
 
-.skin-description .desc-text strong {
+.rental-terms .desc-text strong {
     color: #b0607e;
     font-weight: 600;
 }
 
 /* Rental requirement bullet points: moved to the right (change 50px to taste) */
-.skin-description ul {
+.rental-terms ul {
     margin-left: 50px;
 }
 

@@ -16,13 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // STEP 2: Verify the password using password_verify()
     if ($user && password_verify($password, $user['password'])) {
 
-        // STEP 3: Store id, email, and role in $_SESSION['user']
+        // STEP 3: Store id, email, and role in $_SESSION
         session_regenerate_id(true); // prevent session fixation
-        $_SESSION['user'] = [
-            'id'    => $user['user_id'],
-            'email' => $user['email'],
-            'role'  => $user['role'],
-        ];
+        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['email']   = $user['email'];
+        $_SESSION['role']    = $user['role'];
 
         // STEP 4: Redirect based on role
            if ($user['role'] === 'staff') {
@@ -74,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <section class="auth-panel">
 
             <div class="auth-panel-top">
-                <a href="index.html" class="auth-logo">DRIV<span>O</span>RA</a>
+                <a href="/mainpage/index.php" class="auth-logo">DRIV<span>O</span>RA</a>
                 <a href="/mainpage/index.php" class="auth-back">Back to home</a>
             </div>
 

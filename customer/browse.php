@@ -6,9 +6,9 @@ function e($text) {
     return htmlspecialchars((string)$text);
 }
 
-// is someone logged in? only customers (or visitors) see the RENT NOW button
-$logged_in = isset($_SESSION['user']);
-$can_rent  = !$logged_in || $_SESSION['user']['role'] === 'customer';
+/// is someone logged in? only customers (or visitors) see the RENT NOW button
+$logged_in = isset($_SESSION['user_id']); // 修改这里
+$can_rent  = !$logged_in || $_SESSION['role'] === 'customer'; // 修改这里
 
 // all categories (Coupe, Sedan, MPV ...)
 $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fetchAll();
@@ -30,7 +30,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
         <ul>
             <li><a href="/mainpage/index.php">Home</a></li>
             <?php if ($logged_in): ?>
-                <?php if ($_SESSION['user']['role'] === 'customer'): ?>
+                <?php if ($_SESSION['role'] === 'customer'): ?> <!-- 修改这里：去掉 ['user'] -->
                     <li><a href="my-rentals.php">My Rentals</a></li>
                 <?php endif; ?>
                 <li><a href="/system/logout.php">Logout</a></li>
@@ -47,7 +47,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
         </div>
     </header>
 
-    <section class="skin-description">
+    <section class="rental-terms">
         <p class="desc-text"><strong>Rental Requirements</strong></p>
         <ul>
             <li>Minimum age: 21 years old</li>

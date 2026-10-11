@@ -3,7 +3,8 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 
 // only staff can open this page
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'staff') {
+// 修改为正确写法：
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'staff') {
     header('Location: /system/login.php');
     exit;
 }

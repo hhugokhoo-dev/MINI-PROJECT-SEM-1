@@ -3,7 +3,8 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 
 // only admin can open this page
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+// Admin 页面的正确权限检查格式
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header('Location: /system/login.php');
     exit;
 }

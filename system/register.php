@@ -74,9 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <section class="auth-panel">
 
             <div class="auth-panel-top">
-                <a href="index.html" class="auth-logo">DRIV<span>O</span>RA</a>
-                <a href="index.html" class="auth-back">Back to home</a>
-            </div>
+    <a href="/mainpage/index.php" class="auth-logo">DRIV<span>O</span>RA</a>
+    <a href="/mainpage/index.php" class="auth-back">Back to home</a>
+</div>
 
             <div class="auth-panel-main">
                 <div class="auth-form-wrap">

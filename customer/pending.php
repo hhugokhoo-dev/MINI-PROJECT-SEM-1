@@ -3,10 +3,11 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 
 // must be logged in
-   if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'customer') {
-       header('Location: /system/login.php');
-       exit;
-   }
+   // 修改后：
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
+    header('Location: /system/login.php');
+    exit;
+}
 
 // get the car (pending.php?id=3)
 $id = $_GET['id'] ?? 0;
@@ -39,7 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "INSERT INTO rentals (user_id, vehicle_id, start_date, end_date, total_price, status)
              VALUES (?, ?, ?, ?, ?, 'pending')"
         );
-        $stmt->execute([$_SESSION['user']['id'], $id, $start, $end, $total]);
+        // 修改后：
+$stmt->execute([$_SESSION['user_id'], $id, $start, $end, $total]);
 
         $done = true;
     }

@@ -3,7 +3,8 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 
 // only staff can open this page
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'staff') {
+// 修改后：
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'staff') {
     header('Location: /system/login.php');
     exit;
 }
@@ -79,8 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $id ? 'Edit Car' : 'Add Car'; ?> - DRIVORA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- 修改后： -->
+    <title><?php echo $id ? 'Edit Car - DRIVORA' : 'Add Car - DRIVORA'; ?></title>    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/panel.css">
 </head>
 <body>
