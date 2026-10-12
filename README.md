@@ -80,10 +80,10 @@ The UI design of after clicking the rent now button and adding the dashboard.
 Done for a basic structure of the page
 
 ### Blockers / Challenges
-
+Struggled with passing vehicle ID parameters between pages.
 
 ### What I learned
-
+How URL query parameters work in PHP ($_GET['id']).
 
 ---
 
@@ -93,17 +93,17 @@ Done for a basic structure of the page
 Adjust the cliking page 
 
 ### What I actually did
-
+Attempted to fix database connection and setup issues.
 
 ### Blockers / Challenges
 mysql occur problem 
 
 ### What I learned
-
+How database connections work in PHP using PDO.
 
 ---
 
-## Day 5 — Date:5/10/2026
+## Day 5 — Date:3/10/2026
 
 ### What I planned to do today
 Try to solving theb problem of  mysql databse
@@ -112,14 +112,14 @@ Try to solving theb problem of  mysql databse
 Solve the problem 
 
 ### Blockers / Challenges
-
+Troubleshooting database ports and PDO error settings.
 
 ### What I learned
-
+Proper PDO exception handling and verifying database host settings.
 
 ---
 
-## Day 6 — Date: 6/10/2026
+## Day 6 — Date: 4/10/2026
 
 ### What I planned to do today
 The pending page and the staff access
@@ -128,14 +128,14 @@ The pending page and the staff access
 The customer rental request pending page completely done but still need some minor adjust
 
 ### Blockers / Challenges
-
+Calculating total rental price dynamically based on pick-up and return dates.
 
 ### What I learned
-
+Date handling in PHP using strtotime() and date validation.
 
 ---
 
-## Day 7 — Date: 7/10/2026
+## Day 7 — Date: 5/10/2026
 
 ### What I planned to do today
 Done the staff system 
@@ -144,14 +144,14 @@ Done the staff system
 Doing half way of the staff system 
 
 ### Blockers / Challenges
-
+Linking rental data with customer and vehicle details in one table view.
 
 ### What I learned
-
+Writing relational SQL JOIN queries.
 
 ---
 
-## Day 8 — Date: 8/10/2026
+## Day 8 — Date: 6/10/2026
 
 ### What I planned to do today
 Done the staff system and also the admin system
@@ -163,11 +163,11 @@ Staff system done but the admin system still on going
 The difficulties of php
 
 ### What I learned
-
+Managing role authentication (customer, staff, admin) using PHP sessions.
 
 ---
 
-## Day 9 — Date: 9/10/2026
+## Day 9 — Date: 7/10/2026
 
 ### What I planned to do today
 Done the admin system
@@ -179,11 +179,11 @@ Half way done of admin system
 The sql data and the admin systme didnt update simultaneously
 
 ### What I learned
-
+Using header redirects (header('Location: ...')) after form POST actions to refresh data.
 
 ---
 
-## Day 10 — Date: 10/10/2026
+## Day 10 — Date: 8/10/2026
 
 ### What I planned to do today
 Finish the admin system by adding the users php and categories php
@@ -192,14 +192,14 @@ Finish the admin system by adding the users php and categories php
 Done the users php
 
 ### Blockers / Challenges
-
+Preventing admins from accidentally deleting users who have active rental records.
 
 ### What I learned
-
+Checking foreign key relationships with SQL COUNT(*) before deletion.
 
 ---
 
-## Day 11 — Date: 11/10/2026
+## Day 11 — Date: 9/10/2026
 
 ### What I planned to do today
 Finish the admin categories php and also overall all the role php file
@@ -208,69 +208,69 @@ Finish the admin categories php and also overall all the role php file
 Admin page finished 
 
 ### Blockers / Challenges
-
+Managing form values for both adding new cars and editing existing ones.
 
 ### What I learned
-
+Combining Add and Edit features into a single form (vehicle-form.php).
 
 ---
 
-## Day 12 — Date: 12/10/2026
+## Day 12 — Date: 10/10/2026
 
 ### What I planned to do today
-Checking all the php code
+Checking all the php code and also testing the admin page
 
 ### What I actually did
-
+PHP code done checking
 
 ### Blockers / Challenges
-
+Cleaning up messy inline comments and standardizing them into English.
 
 ### What I learned
-
+Code refactoring and maintaining clear academic code structure.
 
 ---
 
-## Day 13 — Date: ____
+## Day 13 — Date: 11/10/2026
 
 ### What I planned to do today
-
+Planned to made the code shorter and simple
 
 ### What I actually did
-
+The code been shoted and simpled
 
 ### Blockers / Challenges
-
+Simplifying code structure without breaking session security or database logic.
 
 ### What I learned
-
+Writing clean, beginner-friendly procedural PHP code.
 
 ---
 
-## Day 14 — Date: ____
+## Day 14 — Date: 12/10/2026
 
 ### What I planned to do today
-
+Overall seeing the entire project code and funtional
 
 ### What I actually did
-
+Testing the entire system
 
 ### Blockers / Challenges
-
+Minor UI bugs and verifying workflow across all three user roles.
 
 ### What I learned
-
+Importance of end-to-end testing before final submission.
 
 ---
 
 ## Final Reflection
 
 ### What went well?
-
+Successfully built a fully functional multi-role car rental system (Customer, Staff, Admin) with secure PDO database handling and a unified "Dark Luxury" UI theme.
 
 ### What would I do differently?
-
+Plan the database structure and foreign key constraints more thoroughly at the beginning to avoid SQL connection and deletion issues during development.
 
 ### Key takeaways from this project
-
+Gained hands-on experience in procedural PHP, SQL queries (JOIN, COUNT), session-based role authorization, and writing clean, maintainable code.
 
