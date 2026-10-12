@@ -137,6 +137,7 @@ nav a:hover {
 /* Seats label uses Quicksand so the numbers are all the same height
    (Playfair Display makes 8 taller than 7) */
 .category-heading span {
+    margin-top: 15px;
     font-family: 'Quicksand', sans-serif;
     background: #f0dce4;
     padding: 0 14px;
