@@ -59,13 +59,19 @@ CREATE TABLE IF NOT EXISTS rentals (
     CHECK (end_date >= start_date)
 );
 
--- Categories
+-- Seed Categories Data
 INSERT INTO categories (categories_name, seats_label, description) VALUES
 ('Coupe', '2-4 seats', 'Sporty coupes and performance cars'),
 ('Sedan', '4-5 seaters', 'Luxury and executive sedans'),
 ('MPV', '4, 7 & 8 seats', 'Spacious premium people movers');
 
--- Coupe (categories_id = 1) - 修正了 Lexus LC500, BMW M4 和 GR86 的数据
+-- Seed Users Data (Admin, Staff, Customer)
+INSERT INTO users (name, email, password, phone, role) VALUES
+('System Admin', 'admin@gmail.com', '123456', '012-3456789', 'admin'),
+('Staff Officer', 'staff@gmail.com', '123456', '012-9876543', 'staff'),
+('Test Customer', 'customer@gmail.com', '123456', '011-1234567', 'customer');
+
+-- Seed Vehicles Data: Coupe (categories_id = 1)
 INSERT INTO vehicles (categories_id, brand, model, engine, transmission_drive, horsepower, acceleration_0_100, feature_tag, slogan, price_per_day, image) VALUES
 (1, 'Lexus', 'LC500', '5.0L V8 naturally aspirated', '10-speed automatic', 471, 4.4, 'Naturally aspirated V8', 'Elegance in Motion.', 1199, 'https://hips.hearstapps.com/hmg-prod/images/2024-lexus-lc-500-convertible-117-655d765c34a2d.jpg?crop=0.764xw:0.647xh;0.115xw,0.262xh&resize=2048:*'),
 (1, 'Mercedes-AMG', 'CLE 53 Coupe', '3.0L inline-6 hybrid', 'All-wheel drive', 443, 4.2, 'Turbo inline-6 hybrid', 'Born to Perform.', 1399, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMohyqrPGthS0Ib0j3jGv4lMdZbWy9AOoZKw0OupzRTQ&s=10'),
@@ -76,7 +82,7 @@ INSERT INTO vehicles (categories_id, brand, model, engine, transmission_drive, h
 (1, 'Mini', 'Cooper JCW Countryman', '2.0L Turbocharged 4-cylinder', 'All-wheel drive', 301, 5.4, 'Turbo hot hatch', 'Racing Spirit.', 888, 'https://assets.autobuzz.my/wp-content/uploads/2023/11/09124322/MINI-John-Cooper-Works-Countryman-all-new-debut.jpg'),
 (1, 'Mercedes-Benz', 'GLE53 Coupe', '3.0L inline-6 hybrid', 'All-wheel drive', 429, 5.2, 'Luxury SUV Coupe', 'Power Meets Prestige.', 1599, 'https://paultan.org/image/2023/11/Mercedes-Benz-GLE53-4Matic-Coupe-Malaysia-1-1200x639.jpg');
 
--- Sedan (categories_id = 2)
+-- Seed Vehicles Data: Sedan (categories_id = 2)
 INSERT INTO vehicles (categories_id, brand, model, engine, transmission_drive, horsepower, acceleration_0_100, feature_tag, slogan, price_per_day, image) VALUES
 (2, 'Mercedes-Benz', 'S450', '3.0L Turbocharged inline-6', 'Rear-wheel drive', 380, 5.0, 'Flagship luxury sedan', 'Supreme Luxury.', 1599, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY_y4KfEhVkKJqJRoW8AwVjFPq2bHuZU-3aqvGEuyAJw&s=10'),
 (2, 'BMW', '740i xDrive', '3.0L Turbocharged inline-6', 'All-wheel drive', 381, 5.2, 'Executive sedan', 'Executive Excellence.', 1599, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAFkk0fK4ILDzBxTYLKy0t4AJqL4Qo_vNWbZNxVVJCAw&s=10'),
@@ -87,7 +93,7 @@ INSERT INTO vehicles (categories_id, brand, model, engine, transmission_drive, h
 (2, 'Volvo', 'S90 B5', '2.0L Turbocharged hybrid', 'Front-wheel drive', 250, 7.1, 'Scandinavian design', 'Scandinavian Elegance.', 1200, 'https://www.ccarprice.com/products/Volvo_S90_2026_3.jpg'),
 (2, 'BMW', '540i M Sport', '3.0L Turbocharged inline-6', 'All-wheel drive', 381, 4.6, 'Sports executive sedan', 'The Thrill of Refined Power.', 950, 'https://bmw.scene7.com/is/image/BMW/g60-ice-stage-ext-dsk-sl?qlt=80&wid=1024&fmt=webp');
 
--- MPV (categories_id = 3)
+-- Seed Vehicles Data: MPV (categories_id = 3)
 INSERT INTO vehicles (categories_id, brand, model, engine, transmission_drive, horsepower, acceleration_0_100, feature_tag, slogan, price_per_day, image) VALUES
 (3, 'Toyota', 'Alphard', '2.5L 4-cylinder petrol', 'Front-wheel drive', 184, 9.8, 'Luxury MPV', 'Absolute Comfort.', 999, 'https://www.automachi.com/wp-content/uploads/2024/01/Alphard-Recon-1.jpg'),
 (3, 'Toyota', 'Vellfire', '2.5L 4-cylinder petrol', 'Front-wheel drive', 184, 9.8, 'Executive lounge', 'First-Class Comfort.', 999, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5n3q_dntsLVe9u0Ul9BSUippeCEChBaDiAhEu7GJq9g&s=10'),
