@@ -6,3 +6,4 @@ session_destroy();
 header('Location: /mainpage/index.php');
 // send the browser to the home page
 exit;
+

@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                        autocomplete="email" required>
                                 <!-- an email box sent as "email"; refilled with what was typed; it cannot be empty -->
                             </div>
-                        </div>
+                       </div>
 
                         <div class="auth-field">
                         <!-- one form row: the password -->

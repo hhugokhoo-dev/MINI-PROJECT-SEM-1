@@ -12,6 +12,5 @@ function require_role($allowed_roles) {
         exit;
         // stop the script so nothing else runs
     }
-    // end of the if
+    
 }
-// end of the tool

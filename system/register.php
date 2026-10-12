@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     // take the email and remove extra spaces
     $password = $_POST['password'];
-    // take the password
+    // take the password 
     $confirm = $_POST['confirm_password'];
     // take the second password (the "type it again" box)
 
@@ -196,6 +196,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         });
     </script>
+
+
 
 </body>
 </html>
