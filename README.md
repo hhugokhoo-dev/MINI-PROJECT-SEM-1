@@ -205,7 +205,7 @@ Done the users php
 Finish the admin categories php and also overall all the role php file
 
 ### What I actually did
-
+Admin page finished 
 
 ### Blockers / Challenges
 
@@ -215,10 +215,10 @@ Finish the admin categories php and also overall all the role php file
 
 ---
 
-## Day 12 — Date: ____
+## Day 12 — Date: 12/10/2026
 
 ### What I planned to do today
-
+Checking all the php code
 
 ### What I actually did
 

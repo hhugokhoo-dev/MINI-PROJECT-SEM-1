@@ -1,49 +1,68 @@
 <?php
-session_start();
+// Enforce customer authentication guard
+require_once __DIR__ . '/../includes/auth_check.php';
+require_role(['customer']);
+
+// Include database connection configuration ($pdo)
 require_once __DIR__ . '/../config/db.php';
 
-// must be logged in
-   // 修改后：
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
-    header('Location: /system/login.php');
-    exit;
+// Retrieve vehicle ID from GET request URL parameter
+$id = 0;
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
 }
 
-// get the car (pending.php?id=3)
-$id = $_GET['id'] ?? 0;
-
+// Fetch selected vehicle record from database
 $stmt = $pdo->prepare("SELECT * FROM vehicles WHERE vehicle_id = ?");
 $stmt->execute([$id]);
-$car = $stmt->fetch();
+$car = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Check if vehicle exists in database
 if (!$car) {
     die('Car not found. <a href="browse.php">Back</a>');
 }
 
-$error = '';
-$done  = false;
+// Ensure vehicle status is available for booking
+if ($car['status'] !== 'available') {
+    die('Sorry, this car is not available now. <a href="browse.php">Back</a>');
+}
 
-// when the form is submitted, save the rental as pending
+// Initialize form handling variables
+$error = '';
+$done = false;
+$start = '';
+$end = '';
+$days = 0;
+$total = 0;
+
+// Handle rental request form submission (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $start = $_POST['start_date'];
-    $end   = $_POST['end_date'];
+    $end = $_POST['end_date'];
 
+    // Date Validation 1: Pick-up date cannot be in the past
     if ($start < date('Y-m-d')) {
         $error = 'Pick-up date cannot be in the past.';
+    
+    // Date Validation 2: Return date must be on or after pick-up date
     } elseif ($end < $start) {
         $error = 'Return date must be after the pick-up date.';
+    
     } else {
-        $days  = max(1, (int)((strtotime($end) - strtotime($start)) / 86400));
+        // Calculate total rental duration in days
+        $days = (strtotime($end) - strtotime($start)) / 86400;
+        if ($days < 1) {
+            $days = 1; // Minimum booking duration is 1 day
+        }
+
+        // Calculate total rental cost
         $total = $days * $car['price_per_day'];
 
-        $stmt = $pdo->prepare(
-            "INSERT INTO rentals (user_id, vehicle_id, start_date, end_date, total_price, status)
-             VALUES (?, ?, ?, ?, ?, 'pending')"
-        );
-        // 修改后：
-$stmt->execute([$_SESSION['user_id'], $id, $start, $end, $total]);
+        // Insert new rental request with 'pending' status
+        $stmt = $pdo->prepare("INSERT INTO rentals (user_id, vehicle_id, start_date, end_date, total_price, status) VALUES (?, ?, ?, ?, ?, 'pending')");
+        $stmt->execute([$_SESSION['user_id'], $id, $start, $end, $total]);
 
-        $done = true;
+        $done = true; // Mark transaction as completed for view rendering
     }
 }
 ?>
@@ -70,17 +89,16 @@ $stmt->execute([$_SESSION['user_id'], $id, $start, $end, $total]);
     <div class="wrap">
 
     <?php if ($done): ?>
-
-        <!-- rental saved: show pending -->
+        <!-- Render confirmation screen after successful submission -->
         <h1>Request Received</h1>
         <div class="card">
             <div class="body">
                 <span class="badge">⏳ PENDING</span>
 
                 <table>
-                    <tr><td>Car</td><td><?php echo $car['brand'] . ' ' . $car['model']; ?></td></tr>
-                    <tr><td>Pick-up date</td><td><?php echo date('d M Y', strtotime($start)); ?></td></tr>
-                    <tr><td>Return date</td><td><?php echo date('d M Y', strtotime($end)); ?></td></tr>
+                    <tr><td>Car</td><td><?php echo htmlspecialchars($car['brand'] . ' ' . $car['model']); ?></td></tr>
+                    <tr><td>Pick-up date</td><td><?php echo htmlspecialchars($start); ?></td></tr>
+                    <tr><td>Return date</td><td><?php echo htmlspecialchars($end); ?></td></tr>
                     <tr><td>Rental days</td><td><?php echo $days; ?></td></tr>
                     <tr><td>Total price</td><td>RM<?php echo number_format($total, 2); ?></td></tr>
                 </table>
@@ -96,18 +114,17 @@ $stmt->execute([$_SESSION['user_id'], $id, $start, $end, $total]);
         </div>
 
     <?php else: ?>
-
-        <!-- choose dates -->
+        <!-- Render vehicle details and booking date form -->
         <h1>Rent This Car</h1>
 
         <div class="card">
-            <img src="<?php echo $car['image']; ?>" alt="">
+            <img src="<?php echo htmlspecialchars($car['image']); ?>" alt="">
             <div class="body">
-                <h2><?php echo $car['brand'] . ' ' . $car['model']; ?></h2>
+                <h2><?php echo htmlspecialchars($car['brand'] . ' ' . $car['model']); ?></h2>
                 <p class="specs">
-                    <?php echo $car['engine']; ?><br>
-                    <?php echo $car['transmission_drive']; ?><br>
-                    <?php echo $car['horsepower']; ?>hp · 0–100 km/h: <?php echo $car['acceleration_0_100']; ?> s
+                    <?php echo htmlspecialchars($car['engine']); ?><br>
+                    <?php echo htmlspecialchars($car['transmission_drive']); ?><br>
+                    <?php echo htmlspecialchars($car['horsepower']); ?>hp · 0–100 km/h: <?php echo htmlspecialchars($car['acceleration_0_100']); ?> s
                 </p>
                 <p class="price">RM<?php echo number_format($car['price_per_day']); ?> <span>/day</span></p>
             </div>
@@ -117,8 +134,9 @@ $stmt->execute([$_SESSION['user_id'], $id, $start, $end, $total]);
             <div class="body">
                 <h2>Choose your dates</h2>
 
-                <?php if ($error): ?>
-                    <div class="error"><?php echo $error; ?></div>
+                <?php if ($error != ''): ?>
+                    <!-- Display date validation error message -->
+                    <div class="error"><?php echo htmlspecialchars($error); ?></div>
                 <?php endif; ?>
 
                 <form method="post">

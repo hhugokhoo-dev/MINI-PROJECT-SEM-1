@@ -6,8 +6,8 @@
 
 body {
     font-family: 'Quicksand', -apple-system, sans-serif;
-    background: #fcf4f7;
-    color: #2d2d2d;
+    background: #0d0f12; /* Deep luxury dark background */
+    color: #f1f5f9; /* Bright titanium white text */
     line-height: 1.6;
     padding: 20px;
     min-height: 100vh;
@@ -18,15 +18,17 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 20px 60px;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    background: #161920; /* Dark container card background */
+    border-radius: 16px;
+    border: 1px solid #272d37;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .logo {
     font-size: 24px;
     font-weight: 800;
     letter-spacing: -0.02em;
-    color: #111111;
+    color: #f1f5f9;
     text-decoration: none;
 }
 
@@ -40,28 +42,34 @@ nav li {
 }
 
 nav a {
-    font-size: 20px;
+    font-size: 18px;
     text-decoration: none;
-    color: #444;
-    font-weight: bold;
+    color: #94a3b8;
+    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
 nav a:hover {
-    color: blueviolet;
+    color: #f26b21; /* Brand orange accent on hover */
 }
 
+/* Banner header with restored supercar background image */
 .header-bg {
-    background-image: url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200&h=400&fit=crop&crop=center');
+    background-image: url('https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=2000&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 24px;
-    padding: 40px 30px;
+    padding: 55px 30px;
+    margin-top: 20px;
     margin-bottom: 30px;
     position: relative;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border: 1px solid #272d37;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
 }
 
+/* Dark overlay mask to make text pop over background image */
 .header-bg::after {
     content: '';
     position: absolute;
@@ -69,7 +77,7 @@ nav a:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 240, 245, 0.60);
+    background: rgba(13, 15, 18, 0.55);
     border-radius: 24px;
     z-index: 0;
 }
@@ -82,23 +90,27 @@ nav a:hover {
 
 .header-content .subtitle {
     font-size: 1.1rem;
-    font-weight: 500;
-    color: #5e3a4a;
-    letter-spacing: 1px;
-    background: rgba(255, 255, 255, 0.6);
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 2px;
+    background: rgba(22, 25, 32, 0.75);
     display: inline-block;
-    padding: 4px 20px;
+    padding: 8px 26px;
     border-radius: 40px;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .rental-terms {
-    background: #fff8fa;
+    background: #161920;
     border-radius: 18px;
-    padding: 18px 24px;
-    margin-bottom: 28px;
-    border-left: 6px solid #c27a9b;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    padding: 22px 28px;
+    margin-bottom: 32px;
+    border-left: 6px solid #f26b21; /* Brand orange left accent border */
+    border-top: 1px solid #272d37;
+    border-right: 1px solid #272d37;
+    border-bottom: 1px solid #272d37;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     gap: 30px;
@@ -106,45 +118,49 @@ nav a:hover {
 }
 
 .rental-terms .desc-text {
-    font-size: 20px;
-    font-weight: 500;
-    color: #3d2a33;
+    font-size: 18px;
+    font-weight: 600;
+    color: #f1f5f9;
 }
 
 .rental-terms .desc-text strong {
-    color: #b0607e;
-    font-weight: 600;
+    color: #f26b21;
+    font-weight: 700;
 }
 
-/* Rental requirement bullet points: moved to the right (change 50px to taste) */
 .rental-terms ul {
-    margin-left: 50px;
+    margin-left: 40px;
+    color: #cbd5e1;
+}
+
+.rental-terms li {
+    font-size: 15px;
+    margin-bottom: 4px;
 }
 
 .category-heading {
     font-family: 'Playfair Display', serif;
-    font-size: 40px;
-    font-weight: 600;
-    color: #4a1e2f;
-    margin: 30px 0 16px 0;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #e8d0da;
+    font-size: 38px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin: 36px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #272d37; /* Dark divider line */
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
+    
 }
 
-/* Seats label uses Quicksand so the numbers are all the same height
-   (Playfair Display makes 8 taller than 7) */
 .category-heading span {
-    margin-top: 15px;
     font-family: 'Quicksand', sans-serif;
-    background: #f0dce4;
-    padding: 0 14px;
+    background: #272d37;
+    padding: 4px 16px;
     border-radius: 40px;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 600;
-    color: #5e3a4a;
+    color: #cbd5e1;
+    margin-top: 15px;
 }
 
 .product-grid {
@@ -156,26 +172,35 @@ nav a:hover {
 }
 
 .product-card {
-    background: #ffffff;
+    background: #161920; /* Dark card background */
     border-radius: 20px;
     position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
-    border: 1px solid rgba(230, 200, 210, 0.25);
+    border: 1px solid #272d37;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    border-color: #3b4252;
 }
 
 .product-card .card-img {
     width: 100%;
-    height: 180px;
+    height: 190px;
     object-fit: cover;
     display: block;
-    background: #f5e8ed;
+    background: #0d0f12;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
 
-/* card-body fills the whole card, so the price + button can sit at the bottom */
 .product-card .card-body {
-    padding: 16px 18px 20px;
+    padding: 18px 20px 22px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -184,118 +209,123 @@ nav a:hover {
 
 .product-card .card-body h3 {
     font-family: 'Playfair Display', serif;
-    font-size: 25px;
-    font-weight: 600;
-    color: #3d1f2c;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f1f5f9;
 }
 
 .product-card .card-body .desc {
-    font-size: 15px;
-    color: #5f4a55;
-    font-weight: 400;
+    font-size: 14px;
+    color: #94a3b8;
+    font-weight: 500;
 }
 
 .card-footer {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 6px;
+    gap: 8px;
+    margin-top: 8px;
 }
 
 .car-tag {
-    font-size: 0.65rem;
+    font-size: 13px;
     font-weight: 600;
-    background: #f0e2e8;
-    padding: 2px 12px;
+    padding: 4px 12px;
     border-radius: 30px;
-    color: #5e3a4a;
-    border: 1px solid #e8d0da;
 }
 
+/* Tag 1: Dark electric blue badge */
 .car-tag.firstdesc {
-    font-size: 15px;
-    background: #d9e6f0;
-    border-color: #b8cddf;
-    color: #2a4a6a;
+    background: #0c2a4a;
+    border: 1px solid #1e4976;
+    color: #38bdf8;
 }
 
+/* Tag 2: Dark gold badge */
 .car-tag.seconddesc {
-    font-size: 15px;
-    background: #f0e8d9;
-    border-color: #dfd4b8;
-    color: #5a4a2a;
+    background: #362a0c;
+    border: 1px solid #614b18;
+    color: #fde047;
 }
 
-/* Price shown above the Rent Now button.
-   margin-top: auto pushes the price and the button to the bottom of every card,
-   so all the buttons line up */
 .card-price {
     margin-top: auto;
-    padding-top: 10px;
-    font-size: 22px;
-    font-weight: 700;
-    color: #3d1f2c;
+    padding-top: 14px;
+    font-size: 24px;
+    font-weight: 800;
+    color: #f1f5f9;
 }
 
 .card-price span {
     font-size: 14px;
     font-weight: 500;
-    color: #8a7680;
+    color: #64748b;
 }
 
-/* Rent Now button — scoped to this class instead of a bare `button` selector,
-   so it won't accidentally style every button added to the page later */
 .rent-btn {
     width: 100%;
-    margin-top: 6px;
+    margin-top: 8px;
     padding: 12px;
     font-size: 15px;
     font-weight: 700;
     letter-spacing: 0.03em;
     color: #ffffff;
-    background-color: #f26b21;
+    background-color: #f26b21; /* Brand orange button */
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .rent-btn:hover {
-    background-color: #d4591a;
+    background-color: #d85611;
 }
 
-/* "NOT AVAILABLE" button (car is rented or in maintenance) */
+.rent-btn:active {
+    transform: scale(0.98);
+}
+
 .rent-btn:disabled {
-    background-color: #bdbdbd;
+    background-color: #272d37;
+    color: #64748b;
     cursor: not-allowed;
 }
 
 footer {
     text-align: center;
     padding: 30px;
-    background: white;
+    background: #161920;
+    border: 1px solid #272d37;
+    border-radius: 16px;
     margin-top: 40px;
+    color: #94a3b8;
+    font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive design adjustments */
+@media (max-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
     nav {
         flex-direction: column;
         align-items: center;
-        padding: 20px 20px;
+        padding: 20px;
     }
     nav ul {
         flex-wrap: wrap;
         justify-content: center;
-        margin-top: 10px;
+        margin-top: 12px;
     }
     nav li {
-        margin: 8px 15px;
+        margin: 6px 12px;
     }
-    nav a {
-        font-size: 18px;
-    }
-    .product-grid {
-        grid-template-columns: repeat(3, 1fr);
+    .rental-terms ul {
+        margin-left: 0;
     }
 }
 
@@ -303,34 +333,11 @@ footer {
     body {
         padding: 12px;
     }
-    .header-bg {
-        padding: 28px 16px;
-        border-radius: 18px;
-    }
-    .header-content .subtitle {
-        font-size: 0.9rem;
-        padding: 2px 14px;
-    }
     .product-grid {
         grid-template-columns: 1fr;
         gap: 18px;
     }
-    .product-card .card-img {
-        height: 150px;
-    }
-    .skin-description {
-        padding: 14px 16px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .skin-description ul {
-        margin-left: 0;
-    }
-    .skin-description .desc-text {
-        font-size: 0.92rem;
-    }
     .category-heading {
-        font-size: 1.4rem;
-        margin-top: 20px;
+        font-size: 28px;
     }
 }

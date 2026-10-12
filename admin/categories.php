@@ -1,47 +1,54 @@
 <?php
-session_start();
+// Enforce admin authentication guard
+require_once __DIR__ . '/../includes/auth_check.php';
+require_role(['admin']);
+
+// Include database connection configuration ($pdo)
 require_once __DIR__ . '/../config/db.php';
-
-// only admin can open this page
-// Admin 页面的正确权限检查格式
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header('Location: /system/login.php');
-    exit;
-}
-
-function e($text) {
-    return htmlspecialchars((string)$text);
-}
 
 $message = '';
 
+// Handle category management form requests (Add, Edit, Delete)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
 
+    // Action 1: Add a new vehicle category
     if ($action === 'add') {
         $stmt = $pdo->prepare("INSERT INTO categories (categories_name, seats_label, description) VALUES (?, ?, ?)");
         $stmt->execute([$_POST['categories_name'], $_POST['seats_label'], $_POST['description']]);
+        header('Location: categories.php');
+        exit;
 
+    // Action 2: Update existing category details
     } elseif ($action === 'edit') {
         $stmt = $pdo->prepare("UPDATE categories SET categories_name = ?, seats_label = ?, description = ? WHERE categories_id = ?");
         $stmt->execute([$_POST['categories_name'], $_POST['seats_label'], $_POST['description'], $_POST['categories_id']]);
-
-    } elseif ($action === 'delete') {
-        try {
-            $stmt = $pdo->prepare("DELETE FROM categories WHERE categories_id = ?");
-            $stmt->execute([$_POST['categories_id']]);
-        } catch (PDOException $e) {
-            // a category that still has cars cannot be deleted
-            $message = 'This category still has cars, so it cannot be deleted.';
-        }
-    }
-
-    if ($message === '') {
         header('Location: categories.php');
         exit;
+
+    // Action 3: Delete category (if no vehicles are attached)
+    } elseif ($action === 'delete') {
+        $categories_id = $_POST['categories_id'];
+
+        // Foreign key integrity check: count vehicles currently linked to this category
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM vehicles WHERE categories_id = ?");
+        $stmt->execute([$categories_id]);
+        $count = $stmt->fetchColumn();
+
+        if ($count > 0) {
+            // Prevent deletion if category still contains assigned vehicles
+            $message = 'This category still has cars, so it cannot be deleted.';
+        } else {
+            // Proceed with deletion if no linked vehicles exist
+            $stmt = $pdo->prepare("DELETE FROM categories WHERE categories_id = ?");
+            $stmt->execute([$categories_id]);
+            header('Location: categories.php');
+            exit;
+        }
     }
 }
 
+// Fetch all categories ordered by ID for backend display
 $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -58,7 +65,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
     <nav>
         <a href="/mainpage/index.php" class="logo">DRIV<span>O</span>RA <small>ADMIN</small></a>
         <ul>
-            <li><a href="categories.php">Categories</a></li>
+            <li><a href="categories.php" class="active">Categories</a></li>
             <li><a href="users.php">Users</a></li>
             <li><a href="/system/logout.php">Logout</a></li>
         </ul>
@@ -67,11 +74,12 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
     <div class="wrap">
         <h1>Manage Categories</h1>
 
-        <?php if ($message): ?>
-            <div class="message"><?php echo $message; ?></div>
+        <?php if ($message != ''): ?>
+            <!-- Display constraint check message -->
+            <div class="message"><?php echo htmlspecialchars($message); ?></div>
         <?php endif; ?>
 
-        <!-- add a new category -->
+        <!-- Form for adding a new category -->
         <form method="post" class="row">
             <input type="hidden" name="action" value="add">
             <input type="text" name="categories_name" placeholder="Category name" required>
@@ -82,14 +90,14 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
 
         <br>
 
-        <!-- existing categories: edit or delete -->
         <?php foreach ($categories as $c): ?>
+        <!-- Form loop for editing or deleting existing categories -->
         <form method="post" class="row">
             <span class="id">#<?php echo $c['categories_id']; ?></span>
             <input type="hidden" name="categories_id" value="<?php echo $c['categories_id']; ?>">
-            <input type="text" name="categories_name" value="<?php echo e($c['categories_name']); ?>" required>
-            <input type="text" name="seats_label" value="<?php echo e($c['seats_label']); ?>">
-            <input type="text" name="description" value="<?php echo e($c['description']); ?>">
+            <input type="text" name="categories_name" value="<?php echo htmlspecialchars($c['categories_name']); ?>" required>
+            <input type="text" name="seats_label" value="<?php echo htmlspecialchars($c['seats_label']); ?>">
+            <input type="text" name="description" value="<?php echo htmlspecialchars($c['description']); ?>">
             <button name="action" value="edit">Save</button>
             <button name="action" value="delete" class="no" onclick="return confirm('Delete this category?');">Delete</button>
         </form>

@@ -1,25 +1,38 @@
 <?php
+// Start or resume session to access user details
 session_start();
+
+// Include database connection file ($pdo)
 require_once __DIR__ . '/../config/db.php';
 
-function e($text) {
-    return htmlspecialchars((string)$text);
+// Check if user is currently logged in
+$logged_in = isset($_SESSION['user_id']);
+
+// Allow renting only if visitor is not logged in OR logged in as a 'customer'
+$can_rent  = !$logged_in || (isset($_SESSION['role']) && $_SESSION['role'] === 'customer');
+
+// Fetch all vehicle categories from the database ordered by category ID
+$categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fetchAll(PDO::FETCH_ASSOC);
+
+// Extract category names and automatically expand MPV to its full name
+$category_names = [];
+foreach ($categories as $c) {
+    $name = $c['categories_name'];
+    // Append full name if category is MPV
+    if (strtoupper($name) === 'MPV') {
+        $name = 'MPV (Multi-Purpose Vehicle)';
+    }
+    $category_names[] = $name;
 }
-
-/// is someone logged in? only customers (or visitors) see the RENT NOW button
-$logged_in = isset($_SESSION['user_id']); // 修改这里
-$can_rent  = !$logged_in || $_SESSION['role'] === 'customer'; // 修改这里
-
-// all categories (Coupe, Sedan, MPV ...)
-$categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fetchAll();
+// Join all category names into a single string separated by ' · '
+$subtitle = implode(' · ', $category_names);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse-Cars</title>
-
+    <title>Browse Cars - DRIVORA</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/browse.css">
 </head>
@@ -30,11 +43,13 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
         <ul>
             <li><a href="/mainpage/index.php">Home</a></li>
             <?php if ($logged_in): ?>
-                <?php if ($_SESSION['role'] === 'customer'): ?> <!-- 修改这里：去掉 ['user'] -->
+                <!-- Check if the logged-in user is a customer -->
+                <?php if ($_SESSION['role'] === 'customer'): ?>
                     <li><a href="my-rentals.php">My Rentals</a></li>
                 <?php endif; ?>
                 <li><a href="/system/logout.php">Logout</a></li>
             <?php else: ?>
+                <!-- Visitor is not logged in -->
                 <li><a href="/system/login.php">Login</a></li>
                 <li><a href="/system/register.php">Register Now</a></li>
             <?php endif; ?>
@@ -43,7 +58,8 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
 
     <header class="header-bg">
         <div class="header-content">
-            <p class="subtitle"><?php echo e(strtoupper(implode(' · ', array_column($categories, 'categories_name')))); ?></p>
+            <!-- Output concatenated category names in uppercase safely -->
+            <p class="subtitle"><?php echo htmlspecialchars(strtoupper($subtitle)); ?></p>
         </div>
     </header>
 
@@ -58,45 +74,59 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
         </ul>
     </section>
 
-    <?php foreach ($categories as $c): ?>
+    <?php 
+    // Outer Loop: Iterate through each category ($c) in the $categories array
+    foreach ($categories as $c): 
 
-        <?php
-        // the cars in this category
+        // Prepare SQL query to select all vehicles under current category ID
         $stmt = $pdo->prepare("SELECT * FROM vehicles WHERE categories_id = ? ORDER BY vehicle_id");
+        
+        // Execute query with current category ID
         $stmt->execute([$c['categories_id']]);
-        $cars = $stmt->fetchAll();
+        
+        // Retrieve all matching vehicles as an associative array
+        $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // skip categories that have no cars
-        if (count($cars) === 0) {
-            continue;
+        // If no vehicles exist in this category, skip rendering and move to next category
+        if (count($cars) === 0) continue;
+
+        // Format category header name (Add full name for MPV)
+        $cat_title = $c['categories_name'];
+        if (strtoupper($cat_title) === 'MPV') {
+            $cat_title = 'MPV (Multi-Purpose Vehicle)';
         }
-        ?>
+    ?>
 
         <h2 class="category-heading">
-            <?php echo e($c['categories_name']); ?> <span><?php echo e($c['seats_label']); ?></span>
+            <?php echo htmlspecialchars($cat_title); ?> 
+            <span><?php echo htmlspecialchars($c['seats_label']); ?></span>
         </h2>
 
         <div class="product-grid">
-
-            <?php foreach ($cars as $v): ?>
+            <?php 
+            // Inner Loop: Iterate through each vehicle ($v) belonging to the current category
+            foreach ($cars as $v): 
+            ?>
             <article class="product-card">
-                <img class="card-img" src="<?php echo e($v['image']); ?>" alt="">
+                <img class="card-img" src="<?php echo htmlspecialchars($v['image']); ?>" alt="">
                 <div class="card-body">
-                    <h3><?php echo e($v['brand'] . ' ' . $v['model']); ?></h3>
-                    <p class="desc"><?php echo e($v['engine']); ?></p>
-                    <p class="desc"><?php echo e($v['transmission_drive']); ?></p>
-                    <p class="desc"><?php echo e($v['horsepower']); ?>hp</p>
-                    <p class="desc">0–100 km/h : <?php echo e($v['acceleration_0_100']); ?> s</p>
+                    <h3><?php echo htmlspecialchars($v['brand'] . ' ' . $v['model']); ?></h3>
+                    
+                    <p class="desc"><?php echo htmlspecialchars($v['engine']); ?></p>
+                    <p class="desc"><?php echo htmlspecialchars($v['horsepower']); ?> hp · <?php echo htmlspecialchars($v['transmission_drive']); ?></p>
 
                     <div class="card-footer">
-                        <span class="car-tag firstdesc"><?php echo e($v['feature_tag']); ?></span>
-                        <span class="car-tag seconddesc">“<?php echo e($v['slogan']); ?>”</span>
+                        <span class="car-tag firstdesc"><?php echo htmlspecialchars($v['feature_tag']); ?></span>
                     </div>
 
-                    <p class="card-price">RM<?php echo number_format($v['price_per_day']); ?> <span>/day</span></p>
+                    <p class="card-price">RM<?php echo number_format($v['price_per_day'], 0); ?> <span>/day</span></p>
 
-                    <?php if ($can_rent): ?>
-                        <?php if ($v['status'] === 'available'): ?>
+                    <?php 
+                    // Check if current user role is allowed to rent (Guests or Customers only)
+                    if ($can_rent): 
+                        // Check if the car is available for booking
+                        if ($v['status'] === 'available'): 
+                    ?>
                             <button class="rent-btn" onclick="location.href='pending.php?id=<?php echo $v['vehicle_id']; ?>'">RENT NOW</button>
                         <?php else: ?>
                             <button class="rent-btn" disabled>NOT AVAILABLE</button>
@@ -104,11 +134,16 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
                     <?php endif; ?>
                 </div>
             </article>
-            <?php endforeach; ?>
-
+            <?php 
+            // End of Inner Loop (Vehicles)
+            endforeach; 
+            ?>
         </div>
 
-    <?php endforeach; ?>
+    <?php 
+    // End of Outer Loop (Categories)
+    endforeach; 
+    ?>
 
     <footer>
         <p>©️ 2026 DRIVORA | Drive further. Rent smarter.</p>

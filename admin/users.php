@@ -1,44 +1,58 @@
 <?php
-session_start();
+// Enforce admin authentication guard
+require_once __DIR__ . '/../includes/auth_check.php';
+require_role(['admin']);
+
+// Include database connection configuration ($pdo)
 require_once __DIR__ . '/../config/db.php';
 
-// only admin can open this page
-// Admin 页面的正确权限检查格式
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header('Location: /system/login.php');
-    exit;
-}
-
-// 修改后：
-$my_id   = $_SESSION['user_id'];
+// Store currently logged-in admin user ID and initialize message variable
+$my_id = $_SESSION['user_id'];
 $message = '';
 
-// an admin cannot change or delete their own account
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['user_id'] != $my_id) {
+// Handle user management actions (Role Change or Account Deletion)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user_id = $_POST['user_id'];
+    $action = $_POST['action'];
 
-    if ($_POST['action'] === 'change_role') {
-        if (in_array($_POST['role'], ['customer', 'staff', 'admin'])) {
+    // Guard constraint: Prevent admins from altering or deleting their own active account
+    if ($user_id == $my_id) {
+        $message = 'You cannot change or delete your own account.';
+
+    // Action 1: Change user role
+    } elseif ($action === 'change_role') {
+        $role = $_POST['role'];
+
+        // Validate role input against permitted roles
+        if (in_array($role, ['customer', 'staff', 'admin'])) {
             $stmt = $pdo->prepare("UPDATE users SET role = ? WHERE user_id = ?");
-            $stmt->execute([$_POST['role'], $_POST['user_id']]);
+            $stmt->execute([$role, $user_id]);
         }
-
-    } elseif ($_POST['action'] === 'delete') {
-        try {
-            $stmt = $pdo->prepare("DELETE FROM users WHERE user_id = ?");
-            $stmt->execute([$_POST['user_id']]);
-        } catch (PDOException $e) {
-            // a user who already has rentals cannot be deleted
-            $message = 'This user already has rentals, so the account cannot be deleted.';
-        }
-    }
-
-    if ($message === '') {
         header('Location: users.php');
         exit;
+
+    // Action 2: Delete user account (with foreign key relationship check)
+    } elseif ($action === 'delete') {
+        // Check if user has associated rental records before deleting
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM rentals WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $count = $stmt->fetchColumn();
+
+        if ($count > 0) {
+            // Prevent deletion if rental history exists
+            $message = 'This user already has rentals, so the account cannot be deleted.';
+        } else {
+            // Proceed with user account deletion
+            $stmt = $pdo->prepare("DELETE FROM users WHERE user_id = ?");
+            $stmt->execute([$user_id]);
+            header('Location: users.php');
+            exit;
+        }
     }
 }
 
-$users = $pdo->query("SELECT user_id, name, email, phone, role, created_at FROM users ORDER BY user_id")->fetchAll(PDO::FETCH_ASSOC);
+// Retrieve all user profiles except sensitive password hashes
+$users = $pdo->query("SELECT user_id, name, email, phone, role FROM users ORDER BY user_id")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -55,7 +69,7 @@ $users = $pdo->query("SELECT user_id, name, email, phone, role, created_at FROM 
         <a href="/mainpage/index.php" class="logo">DRIV<span>O</span>RA <small>ADMIN</small></a>
         <ul>
             <li><a href="categories.php">Categories</a></li>
-            <li><a href="users.php">Users</a></li>
+            <li><a href="users.php" class="active">Users</a></li>
             <li><a href="/system/logout.php">Logout</a></li>
         </ul>
     </nav>
@@ -63,8 +77,9 @@ $users = $pdo->query("SELECT user_id, name, email, phone, role, created_at FROM 
     <div class="wrap">
         <h1>Manage Users</h1>
 
-        <?php if ($message): ?>
-            <div class="message"><?php echo $message; ?></div>
+        <?php if ($message != ''): ?>
+            <!-- Display action restriction or error message -->
+            <div class="message"><?php echo htmlspecialchars($message); ?></div>
         <?php endif; ?>
 
         <table>
@@ -72,33 +87,34 @@ $users = $pdo->query("SELECT user_id, name, email, phone, role, created_at FROM 
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Phone</th>
                 <th>Role</th>
                 <th>Action</th>
             </tr>
 
             <?php foreach ($users as $u): ?>
             <tr>
-                <td><?php echo $u['user_id']; ?></td>
+                <td>#<?php echo $u['user_id']; ?></td>
                 <td><?php echo htmlspecialchars($u['name']); ?></td>
                 <td><?php echo htmlspecialchars($u['email']); ?></td>
-                <td><?php echo htmlspecialchars((string)$u['phone']); ?></td>
 
                 <?php if ($u['user_id'] == $my_id): ?>
-                    <td><?php echo $u['role']; ?> <small>(you)</small></td>
+                    <!-- Disable role modification and deletion for current logged-in admin -->
+                    <td><?php echo htmlspecialchars($u['role']); ?> <small>(you)</small></td>
                     <td>-</td>
                 <?php else: ?>
+                    <!-- Form for updating user role -->
                     <td>
                         <form method="post">
                             <input type="hidden" name="user_id" value="<?php echo $u['user_id']; ?>">
                             <select name="role">
                                 <?php foreach (['customer', 'staff', 'admin'] as $role): ?>
-                                    <option value="<?php echo $role; ?>" <?php if ($u['role'] === $role) echo 'selected'; ?>><?php echo $role; ?></option>
+                                    <option value="<?php echo $role; ?>" <?php if ($u['role'] === $role) { echo 'selected'; } ?>><?php echo $role; ?></option>
                                 <?php endforeach; ?>
                             </select>
                             <button name="action" value="change_role">Save</button>
                         </form>
                     </td>
+                    <!-- Form for deleting user account -->
                     <td>
                         <form method="post" onsubmit="return confirm('Delete this user?');">
                             <input type="hidden" name="user_id" value="<?php echo $u['user_id']; ?>">

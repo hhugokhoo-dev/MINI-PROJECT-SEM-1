@@ -1,33 +1,43 @@
 <?php
+// Start session to access session variables
 session_start();
-require_once __DIR__ . '/../config/db.php';
 
-// 只有 Customer 可以访问
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
-    header('Location: /system/login.php');
-    exit;
+// Check if user is logged in and has the customer role
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'customer') {
+    header("Location: ../system/login.php");
+    exit();
 }
 
-// 处理取消订单的请求 (Cancel Button)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_rental_id'])) {
-    // 只能取消自己的，且状态必须是 pending 的订单
-    $stmt = $pdo->prepare("UPDATE rentals SET status = 'cancelled' WHERE rental_id = ? AND user_id = ? AND status = 'pending'");
-    $stmt->execute([$_POST['cancel_rental_id'], $_SESSION['user_id']]);
+// Include database connection configuration
+include '../config/db.php';
 
-    header('Location: my-rentals.php');
-    exit;
+// Store logged-in user ID
+$user_id = $_SESSION['user_id'];
+
+// Check if cancel form was submitted via POST
+if (isset($_POST['rental_id'])) {
+    $rental_id = $_POST['rental_id'];
+
+    // Update rental status to cancelled for pending orders
+    $sql = "UPDATE rentals SET status = 'cancelled' WHERE rental_id = ? AND user_id = ? AND status = 'pending'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$rental_id, $user_id]);
+
+    // Refresh page to show updated status
+    header("Location: my-rentals.php");
+    exit();
 }
 
-// 只查询当前登录顾客的订单
-$stmt = $pdo->prepare(
-    "SELECT r.*, v.brand, v.model
-     FROM rentals r
-     JOIN vehicles v ON r.vehicle_id = v.vehicle_id
-     WHERE r.user_id = ?
-     ORDER BY r.created_at DESC"
-);
-$stmt->execute([$_SESSION['user_id']]);
-$my_rentals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Query all rental records for the current customer joined with vehicle details
+$sql = "SELECT rentals.*, vehicles.brand, vehicles.model 
+        FROM rentals 
+        JOIN vehicles ON rentals.vehicle_id = vehicles.vehicle_id 
+        WHERE rentals.user_id = ? 
+        ORDER BY rentals.rental_id DESC";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$user_id]);
+$my_rentals = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,7 +46,7 @@ $my_rentals = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Rentals - DRIVORA</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/panel.css"> <!-- 假设借用你现有的后台样式 -->
+    <link rel="stylesheet" href="../assets/panel.css">
 </head>
 <body>
 
@@ -56,37 +66,65 @@ $my_rentals = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <tr>
                 <th>Order ID</th>
                 <th>Car</th>
-                <th>Pick-up & Return</th>
+                <th>Start</th>
+                <th>End</th>
                 <th>Total Price</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
 
-            <?php foreach ($my_rentals as $r): ?>
+            <?php 
+            // Loop through each rental record stored in $my_rentals array
+            foreach ($my_rentals as $r) { 
+            ?>
             <tr>
+                <!-- Display the rental ID number -->
                 <td>#<?php echo $r['rental_id']; ?></td>
-                <td><?php echo htmlspecialchars($r['brand'] . ' ' . $r['model']); ?></td>
-                <td><?php echo date('d M Y', strtotime($r['start_date'])); ?> – <?php echo date('d M Y', strtotime($r['end_date'])); ?></td>
-                <td>RM<?php echo number_format($r['total_price'], 2); ?></td>
-                <td><span class="status <?php echo $r['status']; ?>"><?php echo strtoupper($r['status']); ?></span></td>
+
+                <!-- Combine car brand and model with a space -->
+                <td><?php echo $r['brand'] . ' ' . $r['model']; ?></td>
+
+                <!-- Display start and end dates -->
+                <td><?php echo $r['start_date']; ?></td>
+                <td><?php echo $r['end_date']; ?></td>
+
+                <!-- Display price with RM currency tag -->
+                <td>RM<?php echo $r['total_price']; ?></td>
+
+                <!-- Output status name as a CSS class name for styling -->
+                <td><span class="status <?php echo $r['status']; ?>"><?php echo $r['status']; ?></span></td>
+
                 <td>
-                    <!-- 如果是 pending 状态，允许取消 -->
-                    <?php if ($r['status'] === 'pending'): ?>
+                    <?php 
+                    // Show cancel button only if the rental status is 'pending'
+                    if ($r['status'] == 'pending') { 
+                    ?>
                         <form method="post" onsubmit="return confirm('Are you sure you want to cancel this rental?');">
-                            <input type="hidden" name="cancel_rental_id" value="<?php echo $r['rental_id']; ?>">
-                            <button type="submit" class="btn" style="background-color: #dc3545; padding: 5px 10px; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                            <!-- Hidden field to send the rental ID to PHP post request -->
+                            <input type="hidden" name="rental_id" value="<?php echo $r['rental_id']; ?>">
+                            <button class="no">Cancel</button>
                         </form>
-                    <?php else: ?>
+                    <?php 
+                    // Display dash if status is confirmed or cancelled
+                    } else { 
+                    ?>
                         -
-                    <?php endif; ?>
+                    <?php } ?>
                 </td>
             </tr>
-            <?php endforeach; ?>
+            <?php 
+            } // End of foreach loop
+            ?>
         </table>
 
-        <?php if (count($my_rentals) === 0): ?>
+        <?php 
+        // Check if user has no rental history (array count is 0)
+        if (count($my_rentals) == 0) { 
+        ?>
             <p class="empty">You have no rental records yet. <a href="browse.php">Go book a car!</a></p>
-        <?php endif; ?>
+        <?php 
+        } // End of count check
+        ?>
     </div>
 
 </body>
