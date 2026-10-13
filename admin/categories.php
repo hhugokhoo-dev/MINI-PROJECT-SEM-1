@@ -9,19 +9,30 @@ require_once __DIR__ . '/../config/db.php';
 $message = '';
 
 // Handle category management form requests (Add, Edit, Delete)
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') //read the action and proceed three root
+ 
+{
     $action = $_POST['action'];
 
     // Action 1: Add a new vehicle category
     if ($action === 'add') {
+
         $stmt = $pdo->prepare("INSERT INTO categories (categories_name, seats_label, description) VALUES (?, ?, ?)");
+        //  prepare to insert point and use ???to prevent sql injection
+
         $stmt->execute([$_POST['categories_name'], $_POST['seats_label'], $_POST['description']]);
+
         header('Location: categories.php');
+        
         exit;
+// force to stop php to prevent still continue loading when makesure
 
     // Action 2: Update existing category details
     } elseif ($action === 'edit') {
+
         $stmt = $pdo->prepare("UPDATE categories SET categories_name = ?, seats_label = ?, description = ? WHERE categories_id = ?");
+      // able to update back to the database
+
         $stmt->execute([$_POST['categories_name'], $_POST['seats_label'], $_POST['description'], $_POST['categories_id']]);
         header('Location: categories.php');
         exit;
@@ -36,11 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $count = $stmt->fetchColumn();
 
         if ($count > 0) {
-            // Prevent deletion if category still contains assigned vehicles
+            // Prevent deletion if category still contains  vehicles
             $message = 'This category still has cars, so it cannot be deleted.';
         } else {
             // Proceed with deletion if no linked vehicles exist
+
             $stmt = $pdo->prepare("DELETE FROM categories WHERE categories_id = ?");
+            // program go database to check the latest data then arrange follow order and save to $categories 
+
             $stmt->execute([$categories_id]);
             header('Location: categories.php');
             exit;
@@ -75,8 +89,10 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
         <h1>Manage Categories</h1>
 
         <?php if ($message != ''): ?>
-            <!-- Display constraint check message -->
-            <div class="message"><?php echo htmlspecialchars($message); ?></div>
+            <!-- when the delete been block bc of still got vehicles will show errorrrr -->
+            <div class="message"> <?php echo htmlspecialchars($message); ?> </div>
+            <!-- use htmlblabla to pretent XSS -->
+
         <?php endif; ?>
 
         <!-- Form for adding a new category -->
@@ -88,9 +104,16 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
             <button class="ok">+ Add</button>
         </form>
 
+
+
+
+
+
         <br>
 
         <?php foreach ($categories as $c): ?>
+            <!-- use foreach see all the data been classification and wrap into <form> -->
+
         <!-- Form loop for editing or deleting existing categories -->
         <form method="post" class="row">
             <span class="id">#<?php echo $c['categories_id']; ?></span>
@@ -100,6 +123,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY categories_id")->fe
             <input type="text" name="description" value="<?php echo htmlspecialchars($c['description']); ?>">
             <button name="action" value="edit">Save</button>
             <button name="action" value="delete" class="no" onclick="return confirm('Delete this category?');">Delete</button>
+        <!-- add onclick js at button to prevent admin accidentally delete -->
         </form>
         <?php endforeach; ?>
     </div>

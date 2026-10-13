@@ -20,22 +20,28 @@ $car = $stmt->fetch(PDO::FETCH_ASSOC);
 // Check if vehicle exists in database
 if (!$car) {
     die('Car not found. <a href="browse.php">Back</a>');
+    // end the loading to prevent show error
 }
 
 // Ensure vehicle status is available for booking
 if ($car['status'] !== 'available') {
+    // prevent repeat rental
     die('Sorry, this car is not available now. <a href="browse.php">Back</a>');
 }
 
 // Initialize form handling variables
 $error = '';
+
+// boolean,default is false means havent pass,if pass then show true
 $done = false;
+
 $start = '';
 $end = '';
 $days = 0;
 $total = 0;
 
 // Handle rental request form submission (POST)
+// if first enter the page with GET request,skip to html
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $start = $_POST['start_date'];
     $end = $_POST['end_date'];
@@ -50,6 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     } else {
         // Calculate total rental duration in days
+        // using unix timestamp(use time second since 1970 then -minus both start and end )
+        // 86400 is second in one days,use total second /86400 to get total days
         $days = (strtotime($end) - strtotime($start)) / 86400;
         if ($days < 1) {
             $days = 1; // Minimum booking duration is 1 day
@@ -60,6 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Insert new rental request with 'pending' status
         $stmt = $pdo->prepare("INSERT INTO rentals (user_id, vehicle_id, start_date, end_date, total_price, status) VALUES (?, ?, ?, ?, ?, 'pending')");
+        // ??prevent sql injection
+
         $stmt->execute([$_SESSION['user_id'], $id, $start, $end, $total]);
 
         $done = true; // Mark transaction as completed for view rendering
@@ -96,6 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span class="badge">⏳ PENDING</span>
 
                 <table>
+                    <!-- echo=print ,html--=change danger symbol to safety symbol to prevent XSS
+                    change the bad word first so that the browser wont run  -->
                     <tr><td>Car</td><td><?php echo htmlspecialchars($car['brand'] . ' ' . $car['model']); ?></td></tr>
                     <tr><td>Pick-up date</td><td><?php echo htmlspecialchars($start); ?></td></tr>
                     <tr><td>Return date</td><td><?php echo htmlspecialchars($end); ?></td></tr>

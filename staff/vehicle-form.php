@@ -15,7 +15,7 @@ if (isset($_GET['id'])) {
 // Fetch all categories for the category selection dropdown
 $categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC);
 
-// Initialize default empty vehicle array for form fields
+// Initialize default empty vehicle array for form fields so that wont occur error in html
 $car = [
     'categories_id' => '',
     'brand' => '',

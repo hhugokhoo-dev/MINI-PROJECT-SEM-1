@@ -3,13 +3,13 @@
 session_start();
 
 // Check if user is logged in and has the customer role
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'customer') {
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
     header("Location: ../system/login.php");
     exit();
 }
 
 // Include database connection configuration
-include '../config/db.php';
+require_once __DIR__ . '/../config/db.php';
 
 // Store logged-in user ID
 $user_id = $_SESSION['user_id'];
@@ -37,7 +37,7 @@ $sql = "SELECT rentals.*, vehicles.brand, vehicles.model
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user_id]);
-$my_rentals = $stmt->fetchAll();
+$my_rentals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,58 +73,44 @@ $my_rentals = $stmt->fetchAll();
                 <th>Action</th>
             </tr>
 
-            <?php 
-            // Loop through each rental record stored in $my_rentals array
-            foreach ($my_rentals as $r) { 
-            ?>
+            <?php foreach ($my_rentals as $r): ?>
             <tr>
                 <!-- Display the rental ID number -->
-                <td>#<?php echo $r['rental_id']; ?></td>
+                <td>#<?php echo htmlspecialchars($r['rental_id']); ?></td>
 
                 <!-- Combine car brand and model with a space -->
-                <td><?php echo $r['brand'] . ' ' . $r['model']; ?></td>
+                <td><?php echo htmlspecialchars($r['brand'] . ' ' . $r['model']); ?></td>
 
                 <!-- Display start and end dates -->
-                <td><?php echo $r['start_date']; ?></td>
-                <td><?php echo $r['end_date']; ?></td>
+                <td><?php echo htmlspecialchars($r['start_date']); ?></td>
+                <td><?php echo htmlspecialchars($r['end_date']); ?></td>
 
                 <!-- Display price with RM currency tag -->
-                <td>RM<?php echo $r['total_price']; ?></td>
+                <td>RM<?php echo htmlspecialchars($r['total_price']); ?></td>
 
                 <!-- Output status name as a CSS class name for styling -->
-                <td><span class="status <?php echo $r['status']; ?>"><?php echo $r['status']; ?></span></td>
+                <td><span class="status <?php echo htmlspecialchars($r['status']); ?>"><?php echo htmlspecialchars($r['status']); ?></span></td>
 
                 <td>
-                    <?php 
-                    // Show cancel button only if the rental status is 'pending'
-                    if ($r['status'] == 'pending') { 
-                    ?>
+                    <?php if ($r['status'] === 'pending'): ?>
                         <form method="post" onsubmit="return confirm('Are you sure you want to cancel this rental?');">
-                            <!-- Hidden field to send the rental ID to PHP post request -->
-                            <input type="hidden" name="rental_id" value="<?php echo $r['rental_id']; ?>">
+                            <!-- when customer click cancel browser will jump out double make sure -->
+                            <!-- when press cancel js back to false and the submit will cut off wont send request to server -->
+                            <input type="hidden" name="rental_id" value="<?php echo htmlspecialchars($r['rental_id']); ?>">
                             <button class="no">Cancel</button>
                         </form>
-                    <?php 
-                    // Display dash if status is confirmed or cancelled
-                    } else { 
-                    ?>
+                    <?php else: ?>
+                        <!-- means that the order is valid/finalized and cannot be cancelled -->
                         -
-                    <?php } ?>
+                    <?php endif; ?>
                 </td>
             </tr>
-            <?php 
-            } // End of foreach loop
-            ?>
+            <?php endforeach; ?>
         </table>
 
-        <?php 
-        // Check if user has no rental history (array count is 0)
-        if (count($my_rentals) == 0) { 
-        ?>
+        <?php if (count($my_rentals) === 0): ?>
             <p class="empty">You have no rental records yet. <a href="browse.php">Go book a car!</a></p>
-        <?php 
-        } // End of count check
-        ?>
+        <?php endif; ?>
     </div>
 
 </body>

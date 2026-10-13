@@ -1,29 +1,31 @@
 <?php
-// Enforce admin authentication guard
+// ensure only admin can enter this page
 require_once __DIR__ . '/../includes/auth_check.php';
 require_role(['admin']);
 
 // Include database connection configuration ($pdo)
 require_once __DIR__ . '/../config/db.php';
 
-// Store currently logged-in admin user ID and initialize message variable
+// Store currently logged-in admin user ID and initialize message variable to work in self protect
 $my_id = $_SESSION['user_id'];
+
 $message = '';
+// to save the prevent accident or not allowed control mess
 
 // Handle user management actions (Role Change or Account Deletion)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_POST['user_id'];
     $action = $_POST['action'];
 
-    // Guard constraint: Prevent admins from altering or deleting their own active account
+    // Guard constraint: Prevent admins from altering or deleting their own active account to customer 
     if ($user_id == $my_id) {
         $message = 'You cannot change or delete your own account.';
 
     // Action 1: Change user role
-    } elseif ($action === 'change_role') {
+    } else if ($action === 'change_role') {
         $role = $_POST['role'];
 
-        // Validate role input against permitted roles
+        // check the data been transform for front by cus,sta,ad to prevent hacker pass unvalid role by changing table
         if (in_array($role, ['customer', 'staff', 'admin'])) {
             $stmt = $pdo->prepare("UPDATE users SET role = ? WHERE user_id = ?");
             $stmt->execute([$role, $user_id]);
@@ -32,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
 
     // Action 2: Delete user account (with foreign key relationship check)
-    } elseif ($action === 'delete') {
+    } else if ($action === 'delete') {
         // Check if user has associated rental records before deleting
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM rentals WHERE user_id = ?");
         $stmt->execute([$user_id]);
@@ -51,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Retrieve all user profiles except sensitive password hashes
-$users = $pdo->query("SELECT user_id, name, email, phone, role FROM users ORDER BY user_id")->fetchAll(PDO::FETCH_ASSOC);
+// sql checking only take userid,name,email,role and skip hashpsw to prevent spread user psw even though got problem
+$users = $pdo->query("SELECT user_id, name, email,role FROM users ORDER BY user_id")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -83,8 +85,8 @@ $users = $pdo->query("SELECT user_id, name, email, phone, role FROM users ORDER 
         <?php endif; ?>
 
         <table>
-            <tr>
-                <th>ID</th>
+            <tr> <!--tablerow-->
+                <th>ID</th> <!-- tablehead -->
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
@@ -110,10 +112,17 @@ $users = $pdo->query("SELECT user_id, name, email, phone, role FROM users ORDER 
                                 <?php foreach (['customer', 'staff', 'admin'] as $role): ?>
                                     <option value="<?php echo $role; ?>" <?php if ($u['role'] === $role) { echo 'selected'; } ?>><?php echo $role; ?></option>
                                 <?php endforeach; ?>
+                                <!-- use foreach see three role  -->
+                                 <!-- use select and compare the current role and the role in database is same anot  -->
+                                  <!-- if same then add selected to make sure is the real role of current character -->
                             </select>
+
                             <button name="action" value="change_role">Save</button>
+                            <!-- act as butt and action ,when pressed backend can get changerole then can jump to root change role -->
+
                         </form>
                     </td>
+
                     <!-- Form for deleting user account -->
                     <td>
                         <form method="post" onsubmit="return confirm('Delete this user?');">
@@ -121,9 +130,15 @@ $users = $pdo->query("SELECT user_id, name, email, phone, role FROM users ORDER 
                             <button name="action" value="delete" class="no">Delete</button>
                         </form>
                     </td>
+
                 <?php endif; ?>
+                <!-- use : replace {,use endif replace } -->
+                 <!-- used to act as a mark at the end of if stat -->
+
             </tr>
             <?php endforeach; ?>
+            <!-- endwhile,endfor -->
+
         </table>
     </div>
 

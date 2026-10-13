@@ -27,8 +27,10 @@ foreach ($categories as $c) {
 // Join all category names into a single string separated by ' · '
 $subtitle = implode(' · ', $category_names);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,6 +38,7 @@ $subtitle = implode(' · ', $category_names);
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/browse.css">
 </head>
+
 <body>
 
     <nav>
@@ -43,15 +46,21 @@ $subtitle = implode(' · ', $category_names);
         <ul>
             <li><a href="/mainpage/index.php">Home</a></li>
             <?php if ($logged_in): ?>
+
                 <!-- Check if the logged-in user is a customer -->
+                 <!-- make sure only customer acc can see enter my rental -->
                 <?php if ($_SESSION['role'] === 'customer'): ?>
                     <li><a href="my-rentals.php">My Rentals</a></li>
                 <?php endif; ?>
+
                 <li><a href="/system/logout.php">Logout</a></li>
+
             <?php else: ?>
+
                 <!-- Visitor is not logged in -->
                 <li><a href="/system/login.php">Login</a></li>
                 <li><a href="/system/register.php">Register Now</a></li>
+
             <?php endif; ?>
         </ul>
     </nav>
@@ -76,6 +85,7 @@ $subtitle = implode(' · ', $category_names);
 
     <?php 
     // Outer Loop: Iterate through each category ($c) in the $categories array
+    // every cycle means handle car category
     foreach ($categories as $c): 
 
         // Prepare SQL query to select all vehicles under current category ID
@@ -110,7 +120,7 @@ $subtitle = implode(' · ', $category_names);
             <article class="product-card">
                 <img class="card-img" src="<?php echo htmlspecialchars($v['image']); ?>" alt="">
                 <div class="card-body">
-                    <h3><?php echo htmlspecialchars($v['brand'] . ' ' . $v['model']); ?></h3>
+                    <!-- <h3><?php echo htmlspecialchars($v['brand'] . ' ' . $v['model']); ?></h3> -->
                     
                     <p class="desc"><?php echo htmlspecialchars($v['engine']); ?></p>
                     <p class="desc"><?php echo htmlspecialchars($v['horsepower']); ?> hp · <?php echo htmlspecialchars($v['transmission_drive']); ?></p>
@@ -118,15 +128,18 @@ $subtitle = implode(' · ', $category_names);
                     <div class="card-footer">
                         <span class="car-tag firstdesc"><?php echo htmlspecialchars($v['feature_tag']); ?></span>
                     </div>
-
+<!-- format price like 1599.00 to 1599 -->
                     <p class="card-price">RM<?php echo number_format($v['price_per_day'], 0); ?> <span>/day</span></p>
 
                     <?php 
                     // Check if current user role is allowed to rent (Guests or Customers only)
+                    // if is admin or staff login then dont have any butt
+
                     if ($can_rent): 
                         // Check if the car is available for booking
                         if ($v['status'] === 'available'): 
                     ?>
+                    
                             <button class="rent-btn" onclick="location.href='pending.php?id=<?php echo $v['vehicle_id']; ?>'">RENT NOW</button>
                         <?php else: ?>
                             <button class="rent-btn" disabled>NOT AVAILABLE</button>
