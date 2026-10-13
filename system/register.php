@@ -88,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h2>Your next drive starts here.</h2>
 
                 <p>Create an account and book a car in a few minutes.</p>
+                
             </div>
         </section>
 
